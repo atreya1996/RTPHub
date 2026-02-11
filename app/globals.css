@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-primary: #20d39c;
+  --color-accent1: #ffaa37;
+  --color-accent2: #836cf4;
+  --color-ink: #003323;
+  --color-bg: #ffffff;
+  --color-surface: #f7faf9;
+  --color-border: rgba(0, 51, 35, 0.12);
+  --font-family: system-ui;
+  --radius-card: 16px;
+  --radius-button: 14px;
+  --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+body {
+  color: var(--color-ink);
+  background: var(--color-bg);
+}

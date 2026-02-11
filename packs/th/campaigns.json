@@ -1,0 +1,20 @@
+[
+  {
+    "id": "campaign_cb_th",
+    "type": "cashback",
+    "title": "Cashback on first payment",
+    "eligibility": {
+      "firstTxnOnly": true
+    },
+    "value": {
+      "amount": 2.0,
+      "currencyCode": "THB"
+    },
+    "caps": {
+      "perUserPerDay": 1
+    },
+    "appliesToMerchantIds": [
+      "merchant_streetfood"
+    ]
+  }
+]

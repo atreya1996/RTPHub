@@ -1,0 +1,63 @@
+{
+  "id": "acq_dynamic_qr",
+  "title": "Dynamic QR",
+  "entry": "enter_amount",
+  "steps": {
+    "enter_amount": {
+      "screen": "EnterAmount",
+      "props": {
+        "suggested": [
+          25,
+          50,
+          100
+        ]
+      },
+      "on": {
+        "AMOUNT_CONFIRMED": "offer"
+      }
+    },
+    "offer": {
+      "screen": "OfferApplied",
+      "on": {
+        "CONTINUE": "confirm"
+      }
+    },
+    "confirm": {
+      "screen": "ConfirmPay",
+      "on": {
+        "PAY": "processing"
+      }
+    },
+    "processing": {
+      "screen": "Processing",
+      "simulate": {
+        "delayMs": 1500,
+        "result": "SUCCESS"
+      },
+      "on": {
+        "SUCCESS": "receipt",
+        "FAILURE": "failed"
+      }
+    },
+    "receipt": {
+      "screen": "PaymentResult",
+      "props": {
+        "status": "SUCCESS"
+      },
+      "on": {
+        "DONE": "END"
+      }
+    },
+    "failed": {
+      "screen": "PaymentResult",
+      "props": {
+        "status": "FAILED",
+        "retry": true
+      },
+      "on": {
+        "RETRY": "processing",
+        "DONE": "END"
+      }
+    }
+  }
+}

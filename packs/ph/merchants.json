@@ -1,0 +1,34 @@
+[
+  {
+    "id": "merchant_sarisari",
+    "name": "Sari-sari Store",
+    "logoPath": "assets/merchants/sample.svg",
+    "category": "retail",
+    "countryCode": "PH",
+    "defaultCurrencyCode": "PHP"
+  },
+  {
+    "id": "merchant_jollibee",
+    "name": "Jollibee",
+    "logoPath": "assets/merchants/sample.svg",
+    "category": "retail",
+    "countryCode": "PH",
+    "defaultCurrencyCode": "PHP"
+  },
+  {
+    "id": "merchant_sm",
+    "name": "SM Supermalls Kiosk",
+    "logoPath": "assets/merchants/sample.svg",
+    "category": "retail",
+    "countryCode": "PH",
+    "defaultCurrencyCode": "PHP"
+  },
+  {
+    "id": "merchant_mercury",
+    "name": "Mercury Drug",
+    "logoPath": "assets/merchants/sample.svg",
+    "category": "retail",
+    "countryCode": "PH",
+    "defaultCurrencyCode": "PHP"
+  }
+]
