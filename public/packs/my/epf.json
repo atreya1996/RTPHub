@@ -1,0 +1,62 @@
+{
+  "epfBrand": {
+    "logoPath": "/packs/my/assets/epf/kwsp-logo.svg",
+    "primaryColor": "#0F4FA8",
+    "surfaceColor": "#FFFFFF",
+    "textColor": "#0B1F44"
+  },
+  "sampleMember": {
+    "memberIdMasked": "900101-**-1234",
+    "name": "Ahli Demo",
+    "balance": 123456.78,
+    "lastContribution": 450.0,
+    "dividendRate": "5.35%"
+  },
+  "contributionRules": {
+    "min": 10,
+    "max": 10000,
+    "presets": [50, 100, 500, 1000, 1500, 2000]
+  },
+  "paymentMethods": [
+    {
+      "id": "duitnow",
+      "label": "DuitNow",
+      "description": "Instant confirmation",
+      "feeLabel": "No fee",
+      "logo": "/packs/my/assets/duitnow.svg",
+      "subOptions": ["QR", "DuitNow Transfer", "DuitNow Pay"]
+    },
+    {
+      "id": "fpx",
+      "label": "FPX (Internet Banking)",
+      "description": "Redirect to bank login",
+      "feeLabel": "No fee",
+      "logo": "/packs/my/assets/fpx.svg"
+    },
+    {
+      "id": "debit",
+      "label": "Debit Card",
+      "description": "Card payment",
+      "feeLabel": "No fee",
+      "logo": "/packs/my/assets/debit.svg"
+    },
+    {
+      "id": "wallet",
+      "label": "e-Wallets",
+      "description": "TNG, GrabPay, ShopeePay",
+      "feeLabel": "May include wallet fee",
+      "logo": "/packs/my/assets/wallet.svg"
+    }
+  ],
+  "banksList": [
+    { "id": "maybank2u", "name": "Maybank2u", "logo": "/packs/my/assets/maybank.svg" },
+    { "id": "cimbclicks", "name": "CIMB Clicks", "logo": "/packs/my/assets/cimb.svg" },
+    { "id": "rhbnow", "name": "RHB Now", "logo": "/packs/my/assets/rhb.svg" },
+    { "id": "publicbank", "name": "Public Bank", "logo": "/packs/my/assets/publicbank.svg" }
+  ],
+  "wallets": [
+    { "id": "tng", "name": "TNG eWallet", "logo": "/packs/my/assets/tng.svg" },
+    { "id": "grabpay", "name": "GrabPay", "logo": "/packs/my/assets/grabpay.svg" },
+    { "id": "shopeepay", "name": "ShopeePay", "logo": "/packs/my/assets/shopeepay.svg" }
+  ]
+}

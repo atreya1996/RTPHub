@@ -1,0 +1,42 @@
+[
+  {
+    "id": "biller_electric",
+    "name": "Electricity Utility",
+    "logoPath": "assets/billers/sample.svg",
+    "refLabel": "Account Number",
+    "sampleRefs": [
+      "1234567890"
+    ],
+    "countryCode": "MY"
+  },
+  {
+    "id": "biller_water",
+    "name": "Water Utility",
+    "logoPath": "assets/billers/sample.svg",
+    "refLabel": "Account Number",
+    "sampleRefs": [
+      "1234567890"
+    ],
+    "countryCode": "MY"
+  },
+  {
+    "id": "biller_telecom",
+    "name": "Telecom Postpaid",
+    "logoPath": "assets/billers/sample.svg",
+    "refLabel": "Account Number",
+    "sampleRefs": [
+      "1234567890"
+    ],
+    "countryCode": "MY"
+  },
+  {
+    "id": "biller_card",
+    "name": "Credit Card",
+    "logoPath": "assets/billers/sample.svg",
+    "refLabel": "Account Number",
+    "sampleRefs": [
+      "1234567890"
+    ],
+    "countryCode": "MY"
+  }
+]

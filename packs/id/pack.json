@@ -1,0 +1,26 @@
+{
+  "packId": "id",
+  "packName": "Indonesia - QR + Bills",
+  "defaultLocale": "id-ID",
+  "defaultCurrency": {
+    "code": "IDR",
+    "symbol": "Rp",
+    "minorUnit": 0,
+    "formatStyle": "symbol"
+  },
+  "appIdentity": {
+    "name": "QRIS",
+    "logoPath": "assets/app-logo.svg"
+  },
+  "brand": {
+    "brandSystem": "PineLabs",
+    "tokensPath": "theme.json"
+  },
+  "data": {
+    "merchantsPath": "merchants.json",
+    "billersPath": "billers.json",
+    "campaignsPath": "campaigns.json",
+    "usecasesAcquiringPath": "usecases.acquiring.json",
+    "usecasesBillsPath": "usecases.bills.json"
+  }
+}

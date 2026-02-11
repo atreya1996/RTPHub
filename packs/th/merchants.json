@@ -1,0 +1,34 @@
+[
+  {
+    "id": "merchant_streetfood",
+    "name": "Street Food",
+    "logoPath": "assets/merchants/sample.svg",
+    "category": "retail",
+    "countryCode": "TH",
+    "defaultCurrencyCode": "THB"
+  },
+  {
+    "id": "merchant_minimart",
+    "name": "Minimart",
+    "logoPath": "assets/merchants/sample.svg",
+    "category": "retail",
+    "countryCode": "TH",
+    "defaultCurrencyCode": "THB"
+  },
+  {
+    "id": "merchant_mall",
+    "name": "Mall Retail",
+    "logoPath": "assets/merchants/sample.svg",
+    "category": "retail",
+    "countryCode": "TH",
+    "defaultCurrencyCode": "THB"
+  },
+  {
+    "id": "merchant_pickup",
+    "name": "E-comm Pickup",
+    "logoPath": "assets/merchants/sample.svg",
+    "category": "retail",
+    "countryCode": "TH",
+    "defaultCurrencyCode": "THB"
+  }
+]

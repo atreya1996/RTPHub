@@ -1,0 +1,37 @@
+[
+  {
+    "id": "static_qr",
+    "title": "Static QR",
+    "description": "Pay by scanning a printed QR",
+    "icon": "qr_static",
+    "flowPath": "flows/acquiring/static-qr.json",
+    "contentPath": "content/acquiring/static-qr.mdx",
+    "merchantRef": "merchant_streetfood",
+    "overrides": {
+      "merchantName": "Street Food",
+      "merchantLogoPath": "assets/merchants/sample.svg",
+      "currencyCode": "THB",
+      "currencySymbol": "\u0e3f"
+    }
+  },
+  {
+    "id": "dynamic_qr",
+    "title": "Dynamic QR",
+    "description": "Merchant-presented QR with amount",
+    "icon": "qr_dynamic",
+    "flowPath": "flows/acquiring/dynamic-qr.json",
+    "contentPath": "content/acquiring/dynamic-qr.mdx",
+    "merchantRef": "merchant_minimart",
+    "overrides": {}
+  },
+  {
+    "id": "loyalty_combo",
+    "title": "Cashback + Loyalty",
+    "description": "Apply offer and earn points",
+    "icon": "loyalty",
+    "flowPath": "flows/acquiring/loyalty.json",
+    "contentPath": "content/acquiring/loyalty.mdx",
+    "merchantRef": "merchant_mall",
+    "overrides": {}
+  }
+]
