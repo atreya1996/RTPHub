@@ -1,0 +1,34 @@
+[
+  {
+    "id": "merchant_warung",
+    "name": "Warung",
+    "logoPath": "assets/merchants/sample.svg",
+    "category": "retail",
+    "countryCode": "ID",
+    "defaultCurrencyCode": "IDR"
+  },
+  {
+    "id": "merchant_minimart",
+    "name": "Minimart",
+    "logoPath": "assets/merchants/sample.svg",
+    "category": "retail",
+    "countryCode": "ID",
+    "defaultCurrencyCode": "IDR"
+  },
+  {
+    "id": "merchant_pharmacy",
+    "name": "Pharmacy",
+    "logoPath": "assets/merchants/sample.svg",
+    "category": "retail",
+    "countryCode": "ID",
+    "defaultCurrencyCode": "IDR"
+  },
+  {
+    "id": "merchant_pickup",
+    "name": "E-comm Pickup",
+    "logoPath": "assets/merchants/sample.svg",
+    "category": "retail",
+    "countryCode": "ID",
+    "defaultCurrencyCode": "IDR"
+  }
+]

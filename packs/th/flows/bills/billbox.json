@@ -1,0 +1,50 @@
+{
+  "id": "bills_billbox",
+  "title": "BillBox",
+  "entry": "billbox",
+  "steps": {
+    "billbox": {
+      "screen": "BillBoxHome",
+      "on": {
+        "OPEN_BILL": "details"
+      }
+    },
+    "details": {
+      "screen": "BillDetails",
+      "on": {
+        "PAY": "processing"
+      }
+    },
+    "processing": {
+      "screen": "Processing",
+      "simulate": {
+        "delayMs": 1200,
+        "result": "SUCCESS"
+      },
+      "on": {
+        "SUCCESS": "receipt",
+        "FAILURE": "failed"
+      }
+    },
+    "receipt": {
+      "screen": "PaymentResult",
+      "props": {
+        "status": "SUCCESS"
+      },
+      "on": {
+        "DONE": "END"
+      }
+    },
+    "failed": {
+      "screen": "PaymentResult",
+      "props": {
+        "status": "FAILED",
+        "retry": true
+      },
+      "on": {
+        "RETRY": "processing",
+        "DONE": "END"
+      }
+    }
+  }
+}

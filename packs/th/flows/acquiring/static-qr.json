@@ -1,0 +1,63 @@
+{
+  "id": "acq_static_qr",
+  "title": "Static QR",
+  "entry": "scan_qr",
+  "steps": {
+    "scan_qr": {
+      "screen": "ScanQR",
+      "on": {
+        "SCANNED": "enter_amount"
+      }
+    },
+    "enter_amount": {
+      "screen": "EnterAmount",
+      "props": {
+        "suggested": [
+          5,
+          10,
+          20
+        ]
+      },
+      "on": {
+        "AMOUNT_CONFIRMED": "confirm"
+      }
+    },
+    "confirm": {
+      "screen": "ConfirmPay",
+      "on": {
+        "PAY": "processing"
+      }
+    },
+    "processing": {
+      "screen": "Processing",
+      "simulate": {
+        "delayMs": 1200,
+        "result": "SUCCESS"
+      },
+      "on": {
+        "SUCCESS": "receipt",
+        "FAILURE": "failed"
+      }
+    },
+    "receipt": {
+      "screen": "PaymentResult",
+      "props": {
+        "status": "SUCCESS"
+      },
+      "on": {
+        "DONE": "END"
+      }
+    },
+    "failed": {
+      "screen": "PaymentResult",
+      "props": {
+        "status": "FAILED",
+        "retry": true
+      },
+      "on": {
+        "RETRY": "processing",
+        "DONE": "END"
+      }
+    }
+  }
+}

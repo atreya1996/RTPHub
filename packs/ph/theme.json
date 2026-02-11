@@ -1,0 +1,23 @@
+{
+  "colors": {
+    "primary": "#20D39C",
+    "accent1": "#FFAA37",
+    "accent2": "#836CF4",
+    "ink": "#003323",
+    "bg": "#FFFFFF",
+    "surface": "#F7FAF9",
+    "border": "rgba(0,51,35,0.12)"
+  },
+  "typography": {
+    "fontFamily": "system-ui",
+    "headingWeight": 700,
+    "bodyWeight": 400
+  },
+  "radius": {
+    "card": 16,
+    "button": 14
+  },
+  "shadow": {
+    "card": "0 10px 30px rgba(0,0,0,0.08)"
+  }
+}
