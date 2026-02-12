@@ -19,15 +19,19 @@ export default function FlowRunner({
     setStepId(flow.entry);
   }, [flow.entry]);
 
-  const step = flow.steps[stepId];
+  const isComplete = stepId === "END";
+  const step = isComplete ? undefined : flow.steps[stepId];
 
   useEffect(() => {
     if (!step?.simulate) return;
     const delay = step.simulate.delayMs * demo.latencyMultiplier * (demo.networkMode === "Low" ? 1.5 : 1);
     const timer = window.setTimeout(() => {
       const event = demo.outcomeMode === "Failure" ? "FAILURE" : demo.outcomeMode === "Pending" ? "PENDING" : step.simulate?.result;
-      if (event && step.on?.[event]) {
-        setStepId(step.on[event]);
+      if (event) {
+        const next = step.on?.[event];
+        if (next) {
+          setStepId(next);
+        }
       }
     }, delay);
     return () => window.clearTimeout(timer);
@@ -37,6 +41,10 @@ export default function FlowRunner({
     if (!step) return null;
     return screenRegistry[step.screen as keyof typeof screenRegistry];
   }, [step]);
+
+  if (isComplete) {
+    return <div className="text-sm text-ink/70">Flow complete.</div>;
+  }
 
   if (!step || !ScreenComponent) {
     return <div className="text-sm text-ink/70">Flow unavailable.</div>;

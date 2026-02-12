@@ -21,6 +21,15 @@ import phCampaigns from "../../packs/ph/campaigns.json";
 import phUsecasesAcquiring from "../../packs/ph/usecases.acquiring.json";
 import phUsecasesBills from "../../packs/ph/usecases.bills.json";
 
+
+function resolvePackAssetPath(packId: string, assetPath?: string): string {
+  if (!assetPath) return "";
+  if (assetPath.startsWith("/") || assetPath.startsWith("http://") || assetPath.startsWith("https://")) {
+    return assetPath;
+  }
+  return `/packs/${packId}/${assetPath}`;
+}
+
 const packData = {
   my: {
     merchants: myMerchants,
@@ -71,14 +80,16 @@ export function resolveContext(
 
   const merchantName = usecase.overrides?.merchantName ?? merchant?.name ?? "Demo Merchant";
 
-  const merchantLogo = usecase.overrides?.merchantLogoPath ?? merchant?.logoPath ?? "assets/merchants/sample.svg";
+  const merchantLogo =
+    usecase.overrides?.merchantLogoPath ??
+    resolvePackAssetPath(pack.packId, merchant?.logoPath ?? "assets/merchants/sample.svg");
 
   const currency = mergeCurrency(pack.defaultCurrency, overrides, usecase.overrides, merchant?.defaultCurrencyCode);
 
   return {
     app: {
       name: overrides.appName ?? pack.appIdentity.name,
-      logoUrl: overrides.appLogoPath ?? pack.appIdentity.logoPath
+      logoUrl: overrides.appLogoPath ?? resolvePackAssetPath(pack.packId, pack.appIdentity.logoPath)
     },
     locale: overrides.locale ?? pack.defaultLocale,
     currency,
