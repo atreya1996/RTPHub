@@ -1,0 +1,21 @@
+{
+  "packId": "my",
+  "packName": "Malaysia - QR + Bills",
+  "defaultLocale": "en-MY",
+  "defaultCurrency": { "code": "MYR", "symbol": "RM", "minorUnit": 2, "formatStyle": "symbol" },
+  "appIdentity": {
+    "name": "Fave",
+    "logoPath": "assets/app-logo.svg"
+  },
+  "brand": {
+    "brandSystem": "PineLabs",
+    "tokensPath": "theme.json"
+  },
+  "data": {
+    "merchantsPath": "merchants.json",
+    "billersPath": "billers.json",
+    "campaignsPath": "campaigns.json",
+    "usecasesAcquiringPath": "usecases.acquiring.json",
+    "usecasesBillsPath": "usecases.bills.json"
+  }
+}

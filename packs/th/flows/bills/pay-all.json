@@ -1,0 +1,19 @@
+{
+  "id": "bills_pay_all",
+  "title": "Pay All Bills",
+  "entry": "pay_all",
+  "steps": {
+    "pay_all": {
+      "screen": "PayAllBills",
+      "on": {
+        "PAY_ALL": "results"
+      }
+    },
+    "results": {
+      "screen": "ExecutionResultsList",
+      "on": {
+        "DONE": "END"
+      }
+    }
+  }
+}

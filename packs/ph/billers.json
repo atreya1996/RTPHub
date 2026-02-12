@@ -1,0 +1,42 @@
+[
+  {
+    "id": "biller_meralco",
+    "name": "Meralco",
+    "logoPath": "assets/billers/sample.svg",
+    "refLabel": "Account Number",
+    "sampleRefs": [
+      "1234567890"
+    ],
+    "countryCode": "PH"
+  },
+  {
+    "id": "biller_pldt",
+    "name": "PLDT",
+    "logoPath": "assets/billers/sample.svg",
+    "refLabel": "Account Number",
+    "sampleRefs": [
+      "1234567890"
+    ],
+    "countryCode": "PH"
+  },
+  {
+    "id": "biller_globe",
+    "name": "Globe Telecom",
+    "logoPath": "assets/billers/sample.svg",
+    "refLabel": "Account Number",
+    "sampleRefs": [
+      "1234567890"
+    ],
+    "countryCode": "PH"
+  },
+  {
+    "id": "biller_water_a",
+    "name": "Water Utility A",
+    "logoPath": "assets/billers/sample.svg",
+    "refLabel": "Account Number",
+    "sampleRefs": [
+      "1234567890"
+    ],
+    "countryCode": "PH"
+  }
+]
