@@ -1,0 +1,26 @@
+{
+  "packId": "th",
+  "packName": "Thailand - QR + Bills",
+  "defaultLocale": "th-TH",
+  "defaultCurrency": {
+    "code": "THB",
+    "symbol": "\u0e3f",
+    "minorUnit": 2,
+    "formatStyle": "symbol"
+  },
+  "appIdentity": {
+    "name": "PromptPay",
+    "logoPath": "assets/app-logo.svg"
+  },
+  "brand": {
+    "brandSystem": "PineLabs",
+    "tokensPath": "theme.json"
+  },
+  "data": {
+    "merchantsPath": "merchants.json",
+    "billersPath": "billers.json",
+    "campaignsPath": "campaigns.json",
+    "usecasesAcquiringPath": "usecases.acquiring.json",
+    "usecasesBillsPath": "usecases.bills.json"
+  }
+}

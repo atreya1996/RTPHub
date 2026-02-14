@@ -1,0 +1,63 @@
+{
+  "id": "bills_agentic",
+  "title": "Agentic Bills",
+  "entry": "chat",
+  "steps": {
+    "chat": {
+      "screen": "ChatAgent",
+      "on": {
+        "UPLOAD": "upload",
+        "CONFIRM": "confirm"
+      }
+    },
+    "upload": {
+      "screen": "UploadBill",
+      "on": {
+        "EXTRACT": "preview"
+      }
+    },
+    "preview": {
+      "screen": "ExtractionPreview",
+      "on": {
+        "CONFIRM": "confirm"
+      }
+    },
+    "confirm": {
+      "screen": "ConfirmPayFromAgent",
+      "on": {
+        "PAY": "processing"
+      }
+    },
+    "processing": {
+      "screen": "Processing",
+      "simulate": {
+        "delayMs": 1500,
+        "result": "SUCCESS"
+      },
+      "on": {
+        "SUCCESS": "receipt",
+        "FAILURE": "failed"
+      }
+    },
+    "receipt": {
+      "screen": "PaymentResult",
+      "props": {
+        "status": "SUCCESS"
+      },
+      "on": {
+        "DONE": "END"
+      }
+    },
+    "failed": {
+      "screen": "PaymentResult",
+      "props": {
+        "status": "FAILED",
+        "retry": true
+      },
+      "on": {
+        "RETRY": "processing",
+        "DONE": "END"
+      }
+    }
+  }
+}

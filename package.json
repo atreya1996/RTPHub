@@ -1,0 +1,29 @@
+{
+  "name": "rtp-hub",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "test": "playwright test",
+    "lint": "next lint",
+    "analyze:bundle": "python scripts/bundle_analyzer.py .",
+    "scaffold:check": "python scripts/frontend_scaffolder.py --analyze"
+  },
+  "dependencies": {
+    "framer-motion": "^11.0.0",
+    "next": "14.2.3",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.4",
+    "typescript": "^5.4.5"
+  },
+  "optionalDependencies": {
+    "@playwright/test": "^1.54.2"
+  }
+}

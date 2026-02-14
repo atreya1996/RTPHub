@@ -1,0 +1,34 @@
+[
+  {
+    "id": "merchant_nasilemak",
+    "name": "Nasi Lemak Stall",
+    "logoPath": "assets/merchants/sample.svg",
+    "category": "retail",
+    "countryCode": "MY",
+    "defaultCurrencyCode": "MYR"
+  },
+  {
+    "id": "merchant_kiosk",
+    "name": "Convenience Store",
+    "logoPath": "assets/merchants/sample.svg",
+    "category": "retail",
+    "countryCode": "MY",
+    "defaultCurrencyCode": "MYR"
+  },
+  {
+    "id": "merchant_pharmacy",
+    "name": "Pharmacy",
+    "logoPath": "assets/merchants/sample.svg",
+    "category": "retail",
+    "countryCode": "MY",
+    "defaultCurrencyCode": "MYR"
+  },
+  {
+    "id": "merchant_online",
+    "name": "Online Checkout",
+    "logoPath": "assets/merchants/sample.svg",
+    "category": "retail",
+    "countryCode": "MY",
+    "defaultCurrencyCode": "MYR"
+  }
+]

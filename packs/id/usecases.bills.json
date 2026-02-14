@@ -1,0 +1,29 @@
+[
+  {
+    "id": "billbox",
+    "title": "BillBox Inbox",
+    "description": "Review and pay bills",
+    "icon": "billbox",
+    "flowPath": "flows/bills/billbox.json",
+    "contentPath": "content/bills/billbox.mdx",
+    "billerRef": "biller_electric"
+  },
+  {
+    "id": "pay_all",
+    "title": "Pay All Bills",
+    "description": "Single tap to clear dues",
+    "icon": "payall",
+    "flowPath": "flows/bills/pay-all.json",
+    "contentPath": "content/bills/pay-all.mdx",
+    "billerRef": "biller_water"
+  },
+  {
+    "id": "agentic",
+    "title": "Agentic Bills",
+    "description": "Pay all due bills this month",
+    "icon": "agent",
+    "flowPath": "flows/bills/agentic.json",
+    "contentPath": "content/bills/agentic.mdx",
+    "billerRef": "biller_electric"
+  }
+]
