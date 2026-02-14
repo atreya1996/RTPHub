@@ -66,7 +66,12 @@ export type UseCase = {
   contentPath: string;
   merchantRef?: string;
   billerRef?: string;
-  overrides?: Record<string, string>;
+  overrides?: {
+    merchantName?: string;
+    merchantLogoPath?: string;
+    currencyCode?: string;
+    currencySymbol?: string;
+  };
 };
 
 export type FlowDefinition = {

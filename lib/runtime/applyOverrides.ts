@@ -1,4 +1,4 @@
-import type { Currency } from "../schema/types";
+import type { Currency, UseCase } from "../schema/types";
 
 export type ThemeOverrides = {
   appName?: string;
@@ -43,7 +43,7 @@ export function readStoredOverrides(): ThemeOverrides {
 export function mergeCurrency(
   base: Currency,
   overrides: ThemeOverrides,
-  usecaseOverrides: Record<string, string> | undefined,
+  usecaseOverrides: UseCase["overrides"] | undefined,
   merchantCurrencyCode?: string
 ): Currency {
   return {
