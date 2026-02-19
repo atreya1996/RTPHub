@@ -139,18 +139,104 @@ function BottomNavigation({ active }: { active: BottomMenuKey }) {
   );
 }
 
-export function ScanQR({ onAction }: ScreenProps) {
+export function ScanQR({ onAction, context }: ScreenProps) {
+  const merchantName = context.merchant?.name ?? "Nearby merchant";
+  const merchantInitial = merchantName.trim().charAt(0).toUpperCase() || "M";
+  const amountHint = context.merchant ? "Amount from QR • usually under 500.00" : "Amount from QR • review before paying";
+
   return (
     <ScreenShell title="Scan QR">
-      <div className="flex flex-col items-center gap-3">
-        <div className="h-32 w-32 rounded-card border border-dashed border-border" />
+      <div className="space-y-4">
+        <div className="relative overflow-hidden rounded-card border border-ink/20 bg-[radial-gradient(circle_at_top,_rgba(120,206,255,0.22),_rgba(8,14,24,0.95)_60%)] p-4 text-white shadow-[0_18px_36px_rgba(2,8,22,0.35)]">
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <div className="text-xs uppercase tracking-[0.12em] text-white/65">Ready to scan</div>
+              <div className="truncate text-sm font-semibold">{merchantName}</div>
+              <div className="text-xs text-white/70">{amountHint}</div>
+            </div>
+            <div className="flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-2 py-1">
+              {context.merchant?.logoUrl ? (
+                <img src={context.merchant.logoUrl} alt={`${merchantName} logo`} className="h-6 w-6 rounded-full border border-white/40 object-cover" />
+              ) : (
+                <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-white/20 text-xs font-bold" aria-hidden="true">
+                  {merchantInitial}
+                </span>
+              )}
+              <span className="max-w-24 truncate text-xs font-medium">{merchantName}</span>
+            </div>
+          </div>
+
+          <div className="relative mx-auto h-44 w-44 overflow-hidden rounded-2xl border border-white/45 bg-white/[0.06]">
+            <div className="pointer-events-none absolute inset-0 border-[3px] border-dashed border-white/60" aria-hidden="true" />
+            <div
+              className="absolute inset-x-3 top-2 h-0.5 rounded-full bg-cyan-200/90 shadow-[0_0_12px_rgba(120,220,255,0.8)]"
+              style={{ animation: "scanLine 2.3s linear infinite" }}
+              aria-hidden="true"
+            />
+            <div className="absolute inset-x-6 bottom-5 rounded-xl border border-white/25 bg-slate-900/80 p-2 backdrop-blur-sm">
+              <div className="mb-2 flex items-center gap-2 text-[10px] text-white/75">
+                <span className="inline-flex h-4 w-4 items-center justify-center rounded-full border border-white/30 text-[9px]">QR</span>
+                <span className="truncate">Merchant card preview</span>
+              </div>
+              <div className="grid grid-cols-7 gap-0.5">
+                {Array.from({ length: 35 }).map((_, index) => (
+                  <span
+                    key={`qr-dot-${index}`}
+                    className={`${index % 2 === 0 || index % 5 === 0 ? "bg-white" : "bg-white/20"} block h-1.5 w-1.5 rounded-[2px]`}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-4 flex items-center justify-between gap-2 text-xs">
+            <button
+              type="button"
+              aria-label="Toggle torch"
+              className="min-h-10 flex-1 rounded-button border border-white/25 bg-white/10 px-3 py-2 font-medium text-white/90"
+            >
+              Torch
+            </button>
+            <button
+              type="button"
+              aria-label="Open help for QR scanning"
+              className="min-h-10 flex-1 rounded-button border border-white/25 bg-white/10 px-3 py-2 font-medium text-white/90"
+            >
+              Help
+            </button>
+            <button
+              type="button"
+              aria-label="Choose QR image from gallery"
+              className="min-h-10 flex-1 rounded-button border border-white/25 bg-white/10 px-3 py-2 font-medium text-white/90"
+            >
+              Gallery
+            </button>
+          </div>
+        </div>
+
         <button
           className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]"
+          aria-label="Simulate successful QR scan"
           onClick={() => onAction("SCANNED")}
         >
           Simulate scan
         </button>
       </div>
+      <style jsx>{`
+        @keyframes scanLine {
+          0% {
+            transform: translateY(0);
+            opacity: 0.8;
+          }
+          50% {
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(9.4rem);
+            opacity: 0.8;
+          }
+        }
+      `}</style>
     </ScreenShell>
   );
 }
