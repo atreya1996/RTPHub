@@ -1,3 +1,5 @@
+import type { Demo } from "../../src/types/demo";
+
 export type Currency = {
   code: string;
   symbol: string;
@@ -95,9 +97,5 @@ export type ResolvedContext = {
   currency: Currency;
   merchant: { id: string; name: string; logoUrl: string; category: string } | null;
   campaigns: Campaign[];
-  demo: {
-    networkMode: "Normal" | "Low";
-    outcomeMode: "Happy" | "Failure" | "Pending";
-    latencyMultiplier: number;
-  };
+  demo: Demo;
 };

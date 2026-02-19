@@ -5,10 +5,10 @@ import phPack from "../../packs/ph/pack.json";
 import type { PackManifest } from "../schema/types";
 
 const packMap: Record<string, PackManifest> = {
-  my: myPack,
-  th: thPack,
-  id: idPack,
-  ph: phPack
+  my: myPack as PackManifest,
+  th: thPack as PackManifest,
+  id: idPack as PackManifest,
+  ph: phPack as PackManifest
 };
 
 export function resolvePack(searchParams?: URLSearchParams): PackManifest {
