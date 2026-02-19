@@ -1,10 +1,13 @@
-/** @type {import('tailwindcss').Config} */
-module.exports = {
+/** @type {import("tailwindcss").Config} */
+const config = {
   content: ["./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}"],
   theme: {
     extend: {
       colors: {
         primary: "var(--color-primary)",
+        primaryStrong: "var(--color-primary-strong)",
+        primarySoft: "var(--color-primary-soft)",
+        accentLime: "var(--color-accent-lime)",
         accent1: "var(--color-accent1)",
         accent2: "var(--color-accent2)",
         ink: "var(--color-ink)",
@@ -26,3 +29,5 @@ module.exports = {
   },
   plugins: []
 };
+
+export default config;

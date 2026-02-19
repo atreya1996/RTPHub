@@ -91,11 +91,15 @@ export default function HomePage() {
   const packData = getPackData(pack.packId);
   const [activeHub, setActiveHub] = useState<"acquiring" | "bills">("acquiring");
   const [activeUsecase, setActiveUsecase] = useState<UseCase>(packData.acquiring[0]);
-  const [demo, setDemo] = useState({
+  const [demo, setDemo] = useState<{
+    networkMode: "Normal" | "Low";
+    outcomeMode: "Happy" | "Failure" | "Pending";
+    latencyMultiplier: number;
+  }>({
     networkMode: "Normal",
     outcomeMode: "Happy",
     latencyMultiplier: 1
-  } as const);
+  });
 
   useEffect(() => {
     if (typeof window !== "undefined") {
