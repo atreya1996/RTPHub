@@ -8,6 +8,7 @@ import FlowRunner from "../components/FlowRunner";
 import HubTile from "../components/HubTile";
 import ThemeStudio from "../components/ThemeStudio";
 import DemoControls from "../components/DemoControls";
+import AppProfileHeader from "../components/AppProfileHeader";
 import type { FlowDefinition, PackManifest, UseCase } from "../lib/schema/types";
 import { getPackData, resolveContext } from "../lib/runtime/resolveContext";
 import { listPacks, resolvePack } from "../lib/runtime/resolvePack";
@@ -131,6 +132,8 @@ export default function HomePage() {
 
   const flow = flowMap[pack.packId]?.[activeUsecase.flowPath] ?? flowMap.my[activeUsecase.flowPath];
   const packs = listPacks();
+  const isBillPayHeaderContext =
+    activeHub === "bills" && ["agentic", "pay_all"].includes(activeUsecase.id);
 
   return (
     <main className="mx-auto flex max-w-6xl flex-col gap-8 px-6 py-10">
@@ -213,13 +216,12 @@ export default function HomePage() {
         <div className="flex min-h-full flex-1 flex-col gap-phone pb-safe">
           <DeviceFrame>
             <div className="flex min-h-full flex-1 flex-col gap-phone pb-safe">
-              <div className="flex items-center gap-3">
-                <img src={resolvedContext.app.logoUrl} alt="App logo" className="h-10 w-10 rounded-full" />
-                <div>
-                  <div className="text-sm font-semibold">{resolvedContext.app.name}</div>
-                  <div className="text-xs text-ink/60">{resolvedContext.locale}</div>
-                </div>
-              </div>
+              <AppProfileHeader
+                appName={resolvedContext.app.name}
+                appLogoUrl={resolvedContext.app.logoUrl}
+                subtitle={resolvedContext.locale}
+                context={isBillPayHeaderContext ? "bill-pay" : "default"}
+              />
               {flow ? <FlowRunner flow={flow} context={resolvedContext} demo={demo} /> : null}
             </div>
           </DeviceFrame>
