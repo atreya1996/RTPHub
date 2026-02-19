@@ -1,5 +1,6 @@
 import type { Campaign, Merchant, PackManifest, ResolvedContext, UseCase } from "../schema/types";
 import { mergeCurrency, readQueryOverrides, readStoredOverrides } from "./applyOverrides";
+import { countryCodeFromPackId } from "./currencyByCountry";
 import myMerchants from "../../packs/my/merchants.json";
 import myBillers from "../../packs/my/billers.json";
 import myCampaigns from "../../packs/my/campaigns.json";
@@ -73,7 +74,11 @@ export function resolveContext(
 ): ResolvedContext {
   const storedOverrides = readStoredOverrides();
   const queryOverrides = readQueryOverrides(searchParams);
-  const overrides = { ...storedOverrides, ...queryOverrides };
+  const overrides = {
+    ...storedOverrides,
+    ...queryOverrides,
+    countryCode: queryOverrides.countryCode ?? storedOverrides.countryCode ?? countryCodeFromPackId(pack.packId)
+  };
   const packId = pack.packId as keyof typeof packData;
   const data = packData[packId] ?? packData.my;
   const merchant = data.merchants.find((item) => item.id === usecase.merchantRef) as Merchant | undefined;
@@ -91,7 +96,7 @@ export function resolveContext(
       name: overrides.appName ?? pack.appIdentity.name,
       logoUrl: overrides.appLogoPath ?? resolvePackAssetPath(pack.packId, pack.appIdentity.logoPath)
     },
-    locale: overrides.locale ?? pack.defaultLocale,
+    locale: pack.defaultLocale,
     currency,
     merchant: merchant
       ? {

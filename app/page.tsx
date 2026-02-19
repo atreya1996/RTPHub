@@ -12,6 +12,7 @@ import AppProfileHeader from "../components/AppProfileHeader";
 import type { FlowDefinition, PackManifest, UseCase } from "../lib/schema/types";
 import { getPackData, resolveContext } from "../lib/runtime/resolveContext";
 import { listPacks, resolvePack } from "../lib/runtime/resolvePack";
+import { countryCodeFromPackId } from "../lib/runtime/currencyByCountry";
 import myTheme from "../packs/my/theme.json";
 import thTheme from "../packs/th/theme.json";
 import idTheme from "../packs/id/theme.json";
@@ -168,8 +169,7 @@ function HomePageContent() {
           initial={{
             appName: resolvedContext.app.name,
             appLogoPath: resolvedContext.app.logoUrl,
-            locale: resolvedContext.locale,
-            currency: resolvedContext.currency
+            countryCode: countryCodeFromPackId(pack.packId)
           }}
         />
         {pack.packId === "my" ? (
