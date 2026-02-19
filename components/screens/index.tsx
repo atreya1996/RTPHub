@@ -198,7 +198,7 @@ export function Processing() {
 }
 
 export function PaymentResult({ onAction, props, context }: ScreenProps) {
-  const status = props?.status ?? "SUCCESS";
+  const status = typeof props?.status === "string" ? props.status : "SUCCESS";
   const retry = props?.retry as boolean | undefined;
   return (
     <ScreenShell title="Payment Result">

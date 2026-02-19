@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import DeviceFrame from "../components/DeviceFrame";
 import ExplainPanel from "../components/ExplainPanel";
@@ -40,6 +40,7 @@ import phLoyalty from "../packs/ph/flows/acquiring/loyalty.json";
 import phBillbox from "../packs/ph/flows/bills/billbox.json";
 import phPayAll from "../packs/ph/flows/bills/pay-all.json";
 import phAgentic from "../packs/ph/flows/bills/agentic.json";
+import type { Demo } from "@/types/demo";
 
 type FlowMap = Record<string, FlowDefinition>;
 
@@ -85,17 +86,17 @@ const flowMap: Record<string, FlowMap> = {
   }
 };
 
-export default function HomePage() {
+function HomePageContent() {
   const searchParams = useSearchParams();
   const pack = resolvePack(searchParams);
   const packData = getPackData(pack.packId);
   const [activeHub, setActiveHub] = useState<"acquiring" | "bills">("acquiring");
   const [activeUsecase, setActiveUsecase] = useState<UseCase>(packData.acquiring[0]);
-  const [demo, setDemo] = useState({
+  const [demo, setDemo] = useState<Demo>({
     networkMode: "Normal",
     outcomeMode: "Happy",
     latencyMultiplier: 1
-  } as const);
+  });
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -232,5 +233,14 @@ export default function HomePage() {
         </div>
       </section>
     </main>
+  );
+}
+
+
+export default function HomePage() {
+  return (
+    <Suspense fallback={null}>
+      <HomePageContent />
+    </Suspense>
   );
 }
