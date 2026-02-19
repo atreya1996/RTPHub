@@ -39,7 +39,17 @@
         "amount": 23.4
       },
       "on": {
-        "DONE": "END"
+        "DONE": "flow_final_success"
+      }
+    },
+    "flow_final_success": {
+      "screen": "FlowFinalScreen",
+      "props": {
+        "status": "SUCCESS",
+        "flowLabel": "Loyalty + Cashback"
+      },
+      "on": {
+        "BACK_TO_HUB": "END"
       }
     }
   }

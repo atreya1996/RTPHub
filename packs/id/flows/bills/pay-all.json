@@ -27,7 +27,17 @@
     "receipts_access": {
       "screen": "AcquiringReceipt",
       "on": {
-        "DONE": "END"
+        "DONE": "flow_final_success"
+      }
+    },
+    "flow_final_success": {
+      "screen": "FlowFinalScreen",
+      "props": {
+        "status": "SUCCESS",
+        "flowLabel": "Pay All Bills"
+      },
+      "on": {
+        "BACK_TO_HUB": "END"
       }
     }
   }
