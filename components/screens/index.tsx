@@ -9,6 +9,15 @@ export type ScreenProps = {
 };
 
 type BottomMenuKey = "home" | "bills" | "scan" | "wallet" | "profile";
+type BillCategory = "electricity" | "mobile" | "government" | "rfid";
+
+type BillItem = {
+  id: string;
+  label: string;
+  helper: string;
+  amount: number;
+  category: BillCategory;
+};
 
 function MenuIcon({ path }: { path: string }) {
   return (
@@ -16,6 +25,81 @@ function MenuIcon({ path }: { path: string }) {
       <path d={path} strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
+}
+
+function BillCategoryIcon({ category }: { category: BillCategory }) {
+  const iconPathByCategory: Record<BillCategory, string> = {
+    electricity: "M13 2 5 14h6l-1 8 9-12h-6l1-8Z",
+    mobile: "M9 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Zm3 15h.01",
+    government: "M3 10h18M5 10V8l7-4 7 4v2M6 10v7m4-7v7m4-7v7m4-7v7M4 17h16",
+    rfid: "M5 13h14l-1.5-4h-11L5 13Zm2 0v3m10-3v3M8 9l1-2h6l1 2"
+  };
+
+  return (
+    <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-surface text-ink/80">
+      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+        <path d={iconPathByCategory[category]} strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </span>
+  );
+}
+
+function BillListItem({ item, dense = false }: { item: BillItem; dense?: boolean }) {
+  return (
+    <div className={`flex items-start gap-3 rounded-xl border border-border ${dense ? "px-2.5 py-2" : "px-3 py-2.5"}`}>
+      <BillCategoryIcon category={item.category} />
+      <div className="min-w-0 flex-1">
+        <div className="truncate text-sm font-medium text-ink">{item.label}</div>
+        <div className="truncate text-xs text-ink/65">{item.helper}</div>
+      </div>
+      <div className="shrink-0 pl-2 text-xs font-semibold text-ink/80">{item.amount.toFixed(2)}</div>
+    </div>
+  );
+}
+
+function isPhilippinesLocale(locale: string): boolean {
+  return locale.trim().toUpperCase().endsWith("-PH") || locale.trim().toUpperCase() === "PH";
+}
+
+function getBillItems(locale: string): BillItem[] {
+  const rfidLabel = isPhilippinesLocale(locale) ? "Auto Sweep" : "RFID";
+  return [
+    {
+      id: "biller_tng_electricity",
+      label: "TNG Electricity Bill",
+      helper: "Electricity • Due in 2 days",
+      amount: 182.3,
+      category: "electricity"
+    },
+    {
+      id: "biller_celcomdigi_postpaid",
+      label: "CelcomDigi Postpaid",
+      helper: "Mobile postpaid • Due tomorrow",
+      amount: 96,
+      category: "mobile"
+    },
+    {
+      id: "biller_mobile_prepaid_topup",
+      label: "Mobile Prepaid Top-up",
+      helper: "Mobile prepaid • Quick reload",
+      amount: 30,
+      category: "mobile"
+    },
+    {
+      id: "biller_land_tax",
+      label: "Land Tax",
+      helper: "Government dues • Annual",
+      amount: 220,
+      category: "government"
+    },
+    {
+      id: "biller_rfid_reload",
+      label: `${rfidLabel} Balance Reload`,
+      helper: `${rfidLabel} toll tag • Low balance`,
+      amount: 50,
+      category: "rfid"
+    }
+  ];
 }
 
 const MENU_ITEMS: Array<{ key: BottomMenuKey; label: string; path: string }> = [
@@ -226,11 +310,17 @@ export function CollectRequestInbox({ onAction }: ScreenProps) {
   );
 }
 
-export function BillBoxHome({ onAction }: ScreenProps) {
+export function BillBoxHome({ onAction, context }: ScreenProps) {
+  const bills = getBillItems(context.locale);
   return (
     <ScreenShell title="BillBox Home" bottomNav={<BottomNavigation active="bills" />}>
       <div className="space-y-3 text-sm">
-        <div>3 bills due this week.</div>
+        <div>{bills.length} bills due this week.</div>
+        <div className="space-y-2">
+          {bills.map((item) => (
+            <BillListItem key={item.id} item={item} />
+          ))}
+        </div>
         <button className="rounded-button bg-primary px-3 py-2 text-sm text-white" onClick={() => onAction("OPEN_BILL")}
         >
           Open bill
@@ -253,11 +343,17 @@ export function BillDetails({ onAction }: ScreenProps) {
   );
 }
 
-export function PayAllBills({ onAction }: ScreenProps) {
+export function PayAllBills({ onAction, context }: ScreenProps) {
+  const bills = getBillItems(context.locale).slice(0, 4);
   return (
     <ScreenShell title="Pay All Bills" bottomNav={<BottomNavigation active="scan" />}>
       <div className="space-y-3 text-sm">
-        <div>2 bills selected for payment.</div>
+        <div>{bills.length} bills selected for payment.</div>
+        <div className="space-y-1.5">
+          {bills.map((item) => (
+            <BillListItem key={item.id} item={item} dense />
+          ))}
+        </div>
         <button className="rounded-button bg-primary px-3 py-2 text-sm text-white" onClick={() => onAction("PAY_ALL")}>
           Pay all
         </button>
