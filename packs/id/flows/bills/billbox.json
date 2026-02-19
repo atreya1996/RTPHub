@@ -4,15 +4,27 @@
   "entry": "billbox",
   "steps": {
     "billbox": {
-      "screen": "BillBoxHome",
+      "screen": "BillInbox",
       "on": {
-        "OPEN_BILL": "details"
+        "PAY_SELECTED": "confirmation"
       }
     },
-    "details": {
-      "screen": "BillDetails",
+    "confirmation": {
+      "screen": "BillPaymentConfirmation",
+      "props": {
+        "biller": "TNG Electricity Bill",
+        "reference": "ELEC-1182-4041",
+        "amount": 182.3,
+        "timestamp": "2026-01-18 10:32"
+      },
       "on": {
-        "PAY": "processing"
+        "CONFIRM": "payment_authentication"
+      }
+    },
+    "payment_authentication": {
+      "screen": "PaymentAuthentication",
+      "on": {
+        "AUTH_SUCCESS": "processing"
       }
     },
     "processing": {
@@ -22,27 +34,53 @@
         "result": "SUCCESS"
       },
       "on": {
-        "SUCCESS": "receipt",
+        "SUCCESS": "success_receipt",
         "FAILURE": "failed"
       }
     },
-    "receipt": {
-      "screen": "PaymentResult",
+    "success_receipt": {
+      "screen": "BillPaymentReceipt",
       "props": {
-        "status": "SUCCESS"
+        "status": "SUCCESS",
+        "biller": "TNG Electricity Bill",
+        "reference": "ELEC-1182-4041",
+        "amount": 182.3,
+        "timestamp": "2026-01-18 10:33"
+      },
+      "on": {
+        "VIEW_PAID_RECEIPTS": "paid_receipts",
+        "DONE": "END"
+      }
+    },
+    "paid_receipts": {
+      "screen": "PaidReceiptsList",
+      "on": {
+        "OPEN_RECEIPT": "receipt_details",
+        "DONE": "END"
+      }
+    },
+    "receipt_details": {
+      "screen": "PaidReceiptDetails",
+      "props": {
+        "biller": "TNG Electricity Bill",
+        "reference": "ELEC-1182-4041",
+        "amount": 182.3,
+        "timestamp": "2026-01-18 10:33"
       },
       "on": {
         "DONE": "END"
       }
     },
     "failed": {
-      "screen": "PaymentResult",
+      "screen": "BillPaymentReceipt",
       "props": {
         "status": "FAILED",
-        "retry": true
+        "biller": "TNG Electricity Bill",
+        "reference": "ELEC-1182-4041",
+        "amount": 182.3,
+        "timestamp": "2026-01-18 10:33"
       },
       "on": {
-        "RETRY": "processing",
         "DONE": "END"
       }
     }
