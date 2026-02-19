@@ -1,30 +1,36 @@
 {
   "id": "bills_agentic",
   "title": "Agentic Bills",
-  "entry": "chat",
+  "entry": "chat_fetch",
   "steps": {
-    "chat": {
+    "chat_fetch": {
       "screen": "ChatAgent",
+      "props": {
+        "mode": "fetch"
+      },
       "on": {
-        "UPLOAD": "upload",
-        "CONFIRM": "confirm"
+        "FETCH_BILLS": "chat_ingested",
+        "BILLS_FETCHED": "chat_ingested",
+        "UPLOAD": "chat_ingested"
       }
     },
-    "upload": {
-      "screen": "UploadBill",
+    "chat_ingested": {
+      "screen": "ChatAgent",
+      "props": {
+        "mode": "ingested",
+        "attachmentType": "Photo/doc"
+      },
       "on": {
-        "EXTRACT": "preview"
+        "EXTRACTION_CONFIRMED": "chat_confirm"
       }
     },
-    "preview": {
-      "screen": "ExtractionPreview",
+    "chat_confirm": {
+      "screen": "ChatAgent",
+      "props": {
+        "mode": "confirm"
+      },
       "on": {
-        "CONFIRM": "confirm"
-      }
-    },
-    "confirm": {
-      "screen": "ConfirmPayFromAgent",
-      "on": {
+        "CANCEL": "chat_fetch",
         "PAY": "processing"
       }
     },
@@ -40,19 +46,19 @@
       }
     },
     "receipt": {
-      "screen": "PaymentResult",
+      "screen": "ChatAgent",
       "props": {
-        "status": "SUCCESS"
+        "mode": "success",
+        "receiptId": "RCT-2026-00182"
       },
       "on": {
         "DONE": "flow_final_success"
       }
     },
     "failed": {
-      "screen": "PaymentResult",
+      "screen": "ChatAgent",
       "props": {
-        "status": "FAILED",
-        "retry": true
+        "mode": "failure"
       },
       "on": {
         "RETRY": "processing",
