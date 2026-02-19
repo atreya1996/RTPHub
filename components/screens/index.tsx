@@ -279,6 +279,126 @@ export function ConfirmPay({ onAction, context }: ScreenProps) {
   );
 }
 
+export function StaticQRMerchantConfirm({ onAction, context }: ScreenProps) {
+  return (
+    <ScreenShell title="Confirm Merchant">
+      <div className="space-y-3 text-sm">
+        <div className="rounded-card border border-border bg-surface px-3 py-2.5">
+          <div className="text-xs uppercase tracking-wide text-ink/60">Merchant</div>
+          <div className="text-base font-semibold text-ink">{context.merchant?.name ?? "Merchant"}</div>
+          <div className="text-xs text-ink/65">Static QR • customer-entered amount</div>
+        </div>
+        <div className="text-lg font-semibold">{formatMoney(18, context.currency, context.locale)}</div>
+        <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("MERCHANT_CONFIRMED")}>
+          Confirm merchant
+        </button>
+      </div>
+    </ScreenShell>
+  );
+}
+
+export function DynamicQRInvoice({ onAction, context }: ScreenProps) {
+  return (
+    <ScreenShell title="Merchant Invoice QR">
+      <div className="space-y-3 text-sm">
+        <div className="rounded-card border border-border bg-surface px-3 py-2.5">
+          <div className="text-xs uppercase tracking-wide text-ink/60">Presented amount</div>
+          <div className="text-lg font-semibold text-ink">{formatMoney(52.8, context.currency, context.locale)}</div>
+          <div className="text-xs text-ink/65">{context.merchant?.name ?? "Merchant"} • Invoice #INV-240381</div>
+        </div>
+        <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("INVOICE_REVIEWED")}>
+          Continue
+        </button>
+      </div>
+    </ScreenShell>
+  );
+}
+
+export function DynamicQROfferDetails({ onAction }: ScreenProps) {
+  return (
+    <ScreenShell title="Offer & Cashback">
+      <div className="space-y-3 text-sm">
+        <div className="rounded-card border border-border bg-surface px-3 py-2.5">
+          <div className="font-medium text-ink">Cashback unlocked</div>
+          <div className="text-xs text-ink/65">5% instant cashback + 2x partner points on this invoice payment.</div>
+        </div>
+        <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("OFFERS_ACCEPTED")}>
+          Apply and continue
+        </button>
+      </div>
+    </ScreenShell>
+  );
+}
+
+export function LoyaltyWalletPreview({ onAction }: ScreenProps) {
+  return (
+    <ScreenShell title="Rewards Wallet Preview">
+      <div className="space-y-3 text-sm">
+        <div className="rounded-card border border-border bg-surface px-3 py-2.5">
+          <div className="font-medium text-ink">Wallet balances</div>
+          <div className="text-xs text-ink/65">Points: 3,240 • Cashback: 12.50 • Stamps: 8/10</div>
+        </div>
+        <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("PREVIEW_CONFIRMED")}>
+          Review redemption
+        </button>
+      </div>
+    </ScreenShell>
+  );
+}
+
+export function LoyaltyRedemptionDetails({ onAction, context }: ScreenProps) {
+  return (
+    <ScreenShell title="Redemption Details">
+      <div className="space-y-3 text-sm">
+        <div className="rounded-card border border-border bg-surface px-3 py-2.5">
+          <div className="font-medium text-ink">Redeeming on this payment</div>
+          <div className="text-xs text-ink/65">Use 500 points for {formatMoney(5, context.currency, context.locale)} off + earn 60 new points.</div>
+        </div>
+        <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("REDEMPTION_CONFIRMED")}>
+          Continue to authentication
+        </button>
+      </div>
+    </ScreenShell>
+  );
+}
+
+export function PaymentAuthentication({ onAction }: ScreenProps) {
+  return (
+    <ScreenShell title="Authenticate Payment">
+      <div className="space-y-3 text-sm">
+        <div>Approve with biometrics or passcode before we process this payment.</div>
+        <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("AUTH_SUCCESS")}>
+          Authenticate
+        </button>
+      </div>
+    </ScreenShell>
+  );
+}
+
+export function AcquiringReceipt({ onAction, context, props }: ScreenProps) {
+  const now = new Date();
+  const txId = typeof props?.txId === "string" ? props.txId : "TXN-94821173";
+  const flow = typeof props?.flowLabel === "string" ? props.flowLabel : "Acquiring";
+  const amount = typeof props?.amount === "number" ? props.amount : 18;
+  return (
+    <ScreenShell title="Payment Receipt">
+      <div className="space-y-3 text-sm">
+        <div className="text-lg font-semibold text-ink">Payment successful</div>
+        <div className="rounded-card border border-border bg-surface px-3 py-2.5 text-xs text-ink/75">
+          <div>Flow: {flow}</div>
+          <div>Transaction ID: {txId}</div>
+          <div>Date/Time: {now.toLocaleString(context.locale)}</div>
+          <div>Merchant: {context.merchant?.name ?? "Merchant"}</div>
+          <div>Amount: {formatMoney(amount, context.currency, context.locale)}</div>
+        </div>
+        <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("DONE")}>
+          Back to Payments Hub
+        </button>
+      </div>
+    </ScreenShell>
+  );
+}
+
 export function Processing() {
   return (
     <ScreenShell title="Processing">
@@ -662,6 +782,13 @@ export const screenRegistry = {
   ScanQR,
   EnterAmount,
   ConfirmPay,
+  StaticQRMerchantConfirm,
+  DynamicQRInvoice,
+  DynamicQROfferDetails,
+  LoyaltyWalletPreview,
+  LoyaltyRedemptionDetails,
+  PaymentAuthentication,
+  AcquiringReceipt,
   Processing,
   PaymentResult,
   OfferApplied,

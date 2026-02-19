@@ -1,18 +1,24 @@
 {
   "id": "acq_loyalty",
   "title": "Loyalty + Cashback",
-  "entry": "loyalty",
+  "entry": "wallet_preview",
   "steps": {
-    "loyalty": {
-      "screen": "LoyaltySummary",
+    "wallet_preview": {
+      "screen": "LoyaltyWalletPreview",
       "on": {
-        "CONTINUE": "confirm"
+        "PREVIEW_CONFIRMED": "redemption_details"
       }
     },
-    "confirm": {
-      "screen": "ConfirmPay",
+    "redemption_details": {
+      "screen": "LoyaltyRedemptionDetails",
       "on": {
-        "PAY": "processing"
+        "REDEMPTION_CONFIRMED": "authenticate"
+      }
+    },
+    "authenticate": {
+      "screen": "PaymentAuthentication",
+      "on": {
+        "AUTH_SUCCESS": "processing"
       }
     },
     "processing": {
@@ -22,27 +28,17 @@
         "result": "SUCCESS"
       },
       "on": {
-        "SUCCESS": "receipt",
-        "FAILURE": "failed"
+        "SUCCESS": "receipt"
       }
     },
     "receipt": {
-      "screen": "PaymentResult",
+      "screen": "AcquiringReceipt",
       "props": {
-        "status": "SUCCESS"
+        "flowLabel": "Loyalty + Cashback",
+        "txId": "MY-LOY-24001",
+        "amount": 23.4
       },
       "on": {
-        "DONE": "END"
-      }
-    },
-    "failed": {
-      "screen": "PaymentResult",
-      "props": {
-        "status": "FAILED",
-        "retry": true
-      },
-      "on": {
-        "RETRY": "processing",
         "DONE": "END"
       }
     }

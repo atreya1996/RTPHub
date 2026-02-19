@@ -19,13 +19,19 @@
         ]
       },
       "on": {
-        "AMOUNT_CONFIRMED": "confirm"
+        "AMOUNT_CONFIRMED": "merchant_confirm"
       }
     },
-    "confirm": {
-      "screen": "ConfirmPay",
+    "merchant_confirm": {
+      "screen": "StaticQRMerchantConfirm",
       "on": {
-        "PAY": "processing"
+        "MERCHANT_CONFIRMED": "authenticate"
+      }
+    },
+    "authenticate": {
+      "screen": "PaymentAuthentication",
+      "on": {
+        "AUTH_SUCCESS": "processing"
       }
     },
     "processing": {
@@ -35,27 +41,17 @@
         "result": "SUCCESS"
       },
       "on": {
-        "SUCCESS": "receipt",
-        "FAILURE": "failed"
+        "SUCCESS": "receipt"
       }
     },
     "receipt": {
-      "screen": "PaymentResult",
+      "screen": "AcquiringReceipt",
       "props": {
-        "status": "SUCCESS"
+        "flowLabel": "Static QR",
+        "txId": "ID-SQR-24001",
+        "amount": 18
       },
       "on": {
-        "DONE": "END"
-      }
-    },
-    "failed": {
-      "screen": "PaymentResult",
-      "props": {
-        "status": "FAILED",
-        "retry": true
-      },
-      "on": {
-        "RETRY": "processing",
         "DONE": "END"
       }
     }
