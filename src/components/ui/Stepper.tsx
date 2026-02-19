@@ -4,7 +4,7 @@ export default function Stepper({ step, total }: { step: number; total: number }
       {Array.from({ length: total }, (_, index) => (
         <span
           key={index}
-          className={`h-1.5 flex-1 rounded-full ${index < step ? "bg-[var(--epf-primary,#0F4FA8)]" : "bg-slate-200"}`}
+          className={`h-1.5 flex-1 rounded-full ${index < step ? "bg-primary" : "bg-border"}`}
         />
       ))}
     </div>

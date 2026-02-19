@@ -15,9 +15,9 @@ export default function AppProfileHeader({
 
   return (
     <div className="flex items-center gap-3">
-      <img src={appLogoUrl} alt="App logo" className="h-10 w-10 rounded-full" />
+      <img src={appLogoUrl} alt="App logo" className="h-10 w-10 rounded-full border border-border object-cover shadow-sm" />
       <div>
-        <div className="text-sm font-semibold">{appName}</div>
+        <div className="text-base font-semibold tracking-tight text-ink">{appName}</div>
         {showSubtitle ? <div className="text-xs text-ink/60">{subtitle}</div> : null}
       </div>
     </div>

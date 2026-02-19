@@ -20,9 +20,16 @@ type BillItem = {
   category: BillCategory;
 };
 
-function MenuIcon({ path }: { path: string }) {
+function MenuIcon({ path, active }: { path: string; active?: boolean }) {
   return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+    <svg
+      viewBox="0 0 24 24"
+      className="h-5 w-5"
+      fill={active ? "currentColor" : "none"}
+      stroke="currentColor"
+      strokeWidth={active ? "1.3" : "1.8"}
+      aria-hidden="true"
+    >
       <path d={path} strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
@@ -37,7 +44,7 @@ function BillCategoryIcon({ category }: { category: BillCategory }) {
   };
 
   return (
-    <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-surface text-ink/80">
+    <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-button border border-border bg-primarySoft text-primaryStrong">
       <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
         <path d={iconPathByCategory[category]} strokeLinecap="round" strokeLinejoin="round" />
       </svg>
@@ -47,7 +54,7 @@ function BillCategoryIcon({ category }: { category: BillCategory }) {
 
 function BillListItem({ item, dense = false }: { item: BillItem; dense?: boolean }) {
   return (
-    <div className={`flex items-start gap-3 rounded-xl border border-border ${dense ? "px-2.5 py-2" : "px-3 py-2.5"}`}>
+    <div className={`flex items-start gap-3 rounded-card border border-border bg-surface ${dense ? "px-2.5 py-2" : "px-3 py-2.5"}`}>
       <BillCategoryIcon category={item.category} />
       <div className="min-w-0 flex-1">
         <div className="truncate text-sm font-medium text-ink">{item.label}</div>
@@ -119,11 +126,11 @@ function BottomNavigation({ active }: { active: BottomMenuKey }) {
         return (
           <div
             key={item.key}
-            className={`flex flex-col items-center gap-1 rounded-xl px-1 py-2 text-[11px] font-medium ${
-              isActive ? "bg-[#00f5a8] text-[#025a50] shadow-sm" : "text-[#0f6d63]"
+            className={`flex min-h-11 flex-col items-center justify-center gap-1 rounded-button px-1 py-2 text-[11px] font-medium transition ${
+              isActive ? "bg-primary text-white shadow-[var(--shadow-interactive)]" : "text-primaryStrong"
             }`}
           >
-            <MenuIcon path={item.path} />
+            <MenuIcon path={item.path} active={isActive} />
             <span>{item.label}</span>
           </div>
         );
@@ -136,9 +143,9 @@ export function ScanQR({ onAction }: ScreenProps) {
   return (
     <ScreenShell title="Scan QR">
       <div className="flex flex-col items-center gap-3">
-        <div className="h-32 w-32 rounded-xl border border-dashed border-border" />
+        <div className="h-32 w-32 rounded-card border border-dashed border-border" />
         <button
-          className="rounded-button bg-primary px-4 py-2 text-sm font-semibold text-white"
+          className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]"
           onClick={() => onAction("SCANNED")}
         >
           Simulate scan
@@ -153,16 +160,16 @@ export function EnterAmount({ onAction, context, props }: ScreenProps) {
   return (
     <ScreenShell title="Enter Amount">
       <div className="space-y-3">
-        <div className="text-2xl font-semibold text-ink">{formatMoney(12.5, context.currency, context.locale)}</div>
+        <div className="text-2xl font-semibold tracking-tight text-ink">{formatMoney(12.5, context.currency, context.locale)}</div>
         <div className="flex flex-wrap gap-2">
           {suggested.map((amount) => (
-            <span key={amount} className="rounded-button border border-border px-3 py-1 text-xs">
+            <span key={amount} className="pill-chip">
               {formatMoney(amount, context.currency, context.locale)}
             </span>
           ))}
         </div>
         <button
-          className="rounded-button bg-primary px-4 py-2 text-sm font-semibold text-white"
+          className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]"
           onClick={() => onAction("AMOUNT_CONFIRMED")}
         >
           Continue
@@ -178,7 +185,7 @@ export function ConfirmPay({ onAction, context }: ScreenProps) {
       <div className="space-y-3 text-sm">
         <div>Paying {context.merchant?.name ?? "Merchant"}</div>
         <div className="text-lg font-semibold">{formatMoney(18, context.currency, context.locale)}</div>
-        <button className="rounded-button bg-primary px-4 py-2 text-sm font-semibold text-white" onClick={() => onAction("PAY")}>
+        <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("PAY")}>
           Pay now
         </button>
       </div>
@@ -191,7 +198,7 @@ export function Processing() {
     <ScreenShell title="Processing">
       <div className="flex items-center justify-between text-sm">
         <span>Contacting network...</span>
-        <span className="rounded-full bg-accent1/20 px-2 py-1 text-xs text-ink">In flight</span>
+        <span className="pill-chip border-none bg-accentLime/30 text-ink">In flight</span>
       </div>
     </ScreenShell>
   );
@@ -207,11 +214,11 @@ export function PaymentResult({ onAction, props, context }: ScreenProps) {
         <div>{formatMoney(18, context.currency, context.locale)} • {context.merchant?.name ?? "Merchant"}</div>
         <div className="flex gap-2">
           {retry ? (
-            <button className="rounded-button border border-border px-3 py-2 text-sm" onClick={() => onAction("RETRY")}>
+            <button className="min-h-11 rounded-button border border-border bg-surface px-4 py-2.5 text-sm font-semibold text-ink" onClick={() => onAction("RETRY")}>
               Retry
             </button>
           ) : null}
-          <button className="rounded-button bg-primary px-3 py-2 text-sm text-white" onClick={() => onAction("DONE")}>
+          <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("DONE")}>
             Done
           </button>
         </div>
@@ -225,7 +232,7 @@ export function OfferApplied({ onAction }: ScreenProps) {
     <ScreenShell title="Offer Applied">
       <div className="space-y-3 text-sm">
         <div>Cashback applied: 5% on this payment.</div>
-        <button className="rounded-button bg-primary px-3 py-2 text-sm text-white" onClick={() => onAction("CONTINUE")}>
+        <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("CONTINUE")}>
           Continue
         </button>
       </div>
@@ -238,7 +245,7 @@ export function LoyaltySummary({ onAction }: ScreenProps) {
     <ScreenShell title="Loyalty Summary">
       <div className="space-y-3 text-sm">
         <div>Earn 120 points + 1 stamp.</div>
-        <button className="rounded-button bg-primary px-3 py-2 text-sm text-white" onClick={() => onAction("CONTINUE")}>
+        <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("CONTINUE")}>
           Continue
         </button>
       </div>
@@ -251,7 +258,7 @@ export function ReserveTimeline({ onAction }: ScreenProps) {
     <ScreenShell title="Reserve Timeline">
       <div className="space-y-3 text-sm">
         <div>Reservation hold placed. Funds will capture at fulfilment.</div>
-        <button className="rounded-button bg-primary px-3 py-2 text-sm text-white" onClick={() => onAction("DONE")}>
+        <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("DONE")}>
           Done
         </button>
       </div>
@@ -264,7 +271,7 @@ export function MultiDebitLedger({ onAction }: ScreenProps) {
     <ScreenShell title="Multi Debit Ledger">
       <div className="space-y-3 text-sm">
         <div>Splitting payment across three instruments.</div>
-        <button className="rounded-button bg-primary px-3 py-2 text-sm text-white" onClick={() => onAction("DONE")}>
+        <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("DONE")}>
           Done
         </button>
       </div>
@@ -277,7 +284,7 @@ export function MandateSetup({ onAction }: ScreenProps) {
     <ScreenShell title="Mandate Setup">
       <div className="space-y-3 text-sm">
         <div>Set up a recurring mandate for monthly bills.</div>
-        <button className="rounded-button bg-primary px-3 py-2 text-sm text-white" onClick={() => onAction("CONTINUE")}>
+        <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("CONTINUE")}>
           Continue
         </button>
       </div>
@@ -290,7 +297,7 @@ export function MandateList({ onAction }: ScreenProps) {
     <ScreenShell title="Mandate List">
       <div className="space-y-3 text-sm">
         <div>Upcoming mandates scheduled.</div>
-        <button className="rounded-button bg-primary px-3 py-2 text-sm text-white" onClick={() => onAction("DONE")}>
+        <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("DONE")}>
           Done
         </button>
       </div>
@@ -303,7 +310,7 @@ export function CollectRequestInbox({ onAction }: ScreenProps) {
     <ScreenShell title="Collect Request Inbox">
       <div className="space-y-3 text-sm">
         <div>2 requests waiting for approval.</div>
-        <button className="rounded-button bg-primary px-3 py-2 text-sm text-white" onClick={() => onAction("PAY")}>
+        <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("PAY")}>
           Pay request
         </button>
       </div>
@@ -322,7 +329,7 @@ export function BillBoxHome({ onAction, context }: ScreenProps) {
             <BillListItem key={item.id} item={item} />
           ))}
         </div>
-        <button className="rounded-button bg-primary px-3 py-2 text-sm text-white" onClick={() => onAction("OPEN_BILL")}
+        <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("OPEN_BILL")}
         >
           Open bill
         </button>
@@ -336,7 +343,7 @@ export function BillDetails({ onAction }: ScreenProps) {
     <ScreenShell title="Bill Details" bottomNav={<BottomNavigation active="bills" />}>
       <div className="space-y-3 text-sm">
         <div>Amount due today.</div>
-        <button className="rounded-button bg-primary px-3 py-2 text-sm text-white" onClick={() => onAction("PAY")}>
+        <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("PAY")}>
           Pay bill
         </button>
       </div>
@@ -355,7 +362,7 @@ export function PayAllBills({ onAction, context }: ScreenProps) {
             <BillListItem key={item.id} item={item} dense />
           ))}
         </div>
-        <button className="rounded-button bg-primary px-3 py-2 text-sm text-white" onClick={() => onAction("PAY_ALL")}>
+        <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("PAY_ALL")}>
           Pay all
         </button>
       </div>
@@ -368,7 +375,7 @@ export function AutopayRulesBuilder({ onAction }: ScreenProps) {
     <ScreenShell title="Autopay Rules">
       <div className="space-y-3 text-sm">
         <div>Set caps and timing for recurring bills.</div>
-        <button className="rounded-button bg-primary px-3 py-2 text-sm text-white" onClick={() => onAction("DONE")}>
+        <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("DONE")}>
           Save rules
         </button>
       </div>
@@ -381,7 +388,7 @@ export function ExecutionResultsList({ onAction }: ScreenProps) {
     <ScreenShell title="Execution Results">
       <div className="space-y-3 text-sm">
         <div>2 payments succeeded, 1 pending confirmation.</div>
-        <button className="rounded-button bg-primary px-3 py-2 text-sm text-white" onClick={() => onAction("DONE")}>
+        <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("DONE")}>
           Done
         </button>
       </div>
@@ -468,11 +475,11 @@ export function ChatAgent({ onAction }: ScreenProps) {
           </div>
 
           {selectedAttachment ? (
-            <div className="mb-2 rounded-xl border border-border bg-white px-3 py-2 text-xs text-ink/70">Attached: {selectedAttachment}</div>
+            <div className="mb-2 rounded-card border border-border bg-surface bg-white px-3 py-2 text-xs text-ink/70">Attached: {selectedAttachment}</div>
           ) : null}
 
           {showAttachmentOptions ? (
-            <div className="mb-2 rounded-xl border border-border bg-white p-2 shadow-sm">
+            <div className="mb-2 rounded-card border border-border bg-surface bg-white p-2 shadow-sm">
               {attachmentOptions.map((option) => (
                 <button
                   key={option.id}
@@ -531,7 +538,7 @@ export function UploadBill({ onAction }: ScreenProps) {
     <ScreenShell title="Upload Bill" bottomNav={<BottomNavigation active="scan" />}>
       <div className="space-y-3 text-sm">
         <div className="h-24 rounded-card border border-dashed border-border" />
-        <button className="rounded-button bg-primary px-3 py-2 text-sm text-white" onClick={() => onAction("EXTRACT")}>
+        <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("EXTRACT")}>
           Extract details
         </button>
       </div>
@@ -544,7 +551,7 @@ export function ExtractionPreview({ onAction }: ScreenProps) {
     <ScreenShell title="Extraction Preview" bottomNav={<BottomNavigation active="bills" />}>
       <div className="space-y-3 text-sm">
         <div>Invoice extracted with due date and total.</div>
-        <button className="rounded-button bg-primary px-3 py-2 text-sm text-white" onClick={() => onAction("CONFIRM")}>
+        <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("CONFIRM")}>
           Confirm
         </button>
       </div>
@@ -557,7 +564,7 @@ export function ConfirmPayFromAgent({ onAction }: ScreenProps) {
     <ScreenShell title="Confirm from Agent" bottomNav={<BottomNavigation active="scan" />}>
       <div className="space-y-3 text-sm">
         <div>Paying recommended bill from agent.</div>
-        <button className="rounded-button bg-primary px-3 py-2 text-sm text-white" onClick={() => onAction("PAY")}>
+        <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("PAY")}>
           Pay now
         </button>
       </div>
