@@ -1,7 +1,7 @@
 [
   {
     "id": "merchant_nasilemak",
-    "name": "Nasi Lemak Stall",
+    "name": "AEON BiG",
     "logoPath": "assets/merchants/sample.svg",
     "category": "retail",
     "countryCode": "MY",
@@ -9,7 +9,7 @@
   },
   {
     "id": "merchant_kiosk",
-    "name": "Convenience Store",
+    "name": "7-Eleven Malaysia",
     "logoPath": "assets/merchants/sample.svg",
     "category": "retail",
     "countryCode": "MY",
@@ -17,7 +17,7 @@
   },
   {
     "id": "merchant_pharmacy",
-    "name": "Pharmacy",
+    "name": "Watsons Malaysia",
     "logoPath": "assets/merchants/sample.svg",
     "category": "retail",
     "countryCode": "MY",
@@ -25,7 +25,7 @@
   },
   {
     "id": "merchant_online",
-    "name": "Online Checkout",
+    "name": "Lotus's Online",
     "logoPath": "assets/merchants/sample.svg",
     "category": "retail",
     "countryCode": "MY",

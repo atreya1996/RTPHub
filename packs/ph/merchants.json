@@ -1,7 +1,7 @@
 [
   {
     "id": "merchant_sarisari",
-    "name": "Sari-sari Store",
+    "name": "SM Supermarket",
     "logoPath": "assets/merchants/sample.svg",
     "category": "retail",
     "countryCode": "PH",
@@ -9,7 +9,7 @@
   },
   {
     "id": "merchant_jollibee",
-    "name": "Jollibee",
+    "name": "SM Foodcourt",
     "logoPath": "assets/merchants/sample.svg",
     "category": "retail",
     "countryCode": "PH",
@@ -17,7 +17,7 @@
   },
   {
     "id": "merchant_sm",
-    "name": "SM Supermalls Kiosk",
+    "name": "SM Store",
     "logoPath": "assets/merchants/sample.svg",
     "category": "retail",
     "countryCode": "PH",
@@ -25,7 +25,7 @@
   },
   {
     "id": "merchant_mercury",
-    "name": "Mercury Drug",
+    "name": "Watsons at SM",
     "logoPath": "assets/merchants/sample.svg",
     "category": "retail",
     "countryCode": "PH",

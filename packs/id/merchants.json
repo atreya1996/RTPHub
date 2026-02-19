@@ -1,7 +1,7 @@
 [
   {
     "id": "merchant_warung",
-    "name": "Warung",
+    "name": "Alfamart",
     "logoPath": "assets/merchants/sample.svg",
     "category": "retail",
     "countryCode": "ID",
@@ -9,7 +9,7 @@
   },
   {
     "id": "merchant_minimart",
-    "name": "Minimart",
+    "name": "Indomaret",
     "logoPath": "assets/merchants/sample.svg",
     "category": "retail",
     "countryCode": "ID",
@@ -17,7 +17,7 @@
   },
   {
     "id": "merchant_pharmacy",
-    "name": "Pharmacy",
+    "name": "Guardian Indonesia",
     "logoPath": "assets/merchants/sample.svg",
     "category": "retail",
     "countryCode": "ID",
@@ -25,7 +25,7 @@
   },
   {
     "id": "merchant_pickup",
-    "name": "E-comm Pickup",
+    "name": "Tokopedia Pickup Point",
     "logoPath": "assets/merchants/sample.svg",
     "category": "retail",
     "countryCode": "ID",

@@ -8,7 +8,7 @@
     "contentPath": "content/acquiring/static-qr.mdx",
     "merchantRef": "merchant_nasilemak",
     "overrides": {
-      "merchantName": "Nasi Lemak Stall",
+      "merchantName": "AEON BiG",
       "merchantLogoPath": "assets/merchants/sample.svg",
       "currencyCode": "MYR",
       "currencySymbol": "RM"

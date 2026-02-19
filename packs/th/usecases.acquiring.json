@@ -8,10 +8,10 @@
     "contentPath": "content/acquiring/static-qr.mdx",
     "merchantRef": "merchant_streetfood",
     "overrides": {
-      "merchantName": "Street Food",
+      "merchantName": "7-Eleven Thailand",
       "merchantLogoPath": "assets/merchants/sample.svg",
       "currencyCode": "THB",
-      "currencySymbol": "\u0e3f"
+      "currencySymbol": "฿"
     }
   },
   {
