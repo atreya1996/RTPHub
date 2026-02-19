@@ -8,7 +8,7 @@
     "contentPath": "content/acquiring/static-qr.mdx",
     "merchantRef": "merchant_warung",
     "overrides": {
-      "merchantName": "Warung",
+      "merchantName": "Alfamart",
       "merchantLogoPath": "assets/merchants/sample.svg",
       "currencyCode": "IDR",
       "currencySymbol": "Rp"

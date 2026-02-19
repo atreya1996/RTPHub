@@ -8,10 +8,10 @@
     "contentPath": "content/acquiring/static-qr.mdx",
     "merchantRef": "merchant_sarisari",
     "overrides": {
-      "merchantName": "Sari-sari Store",
+      "merchantName": "SM Supermarket",
       "merchantLogoPath": "assets/merchants/sample.svg",
       "currencyCode": "PHP",
-      "currencySymbol": "\u20b1"
+      "currencySymbol": "₱"
     }
   },
   {

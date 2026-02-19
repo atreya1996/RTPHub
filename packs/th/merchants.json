@@ -1,7 +1,7 @@
 [
   {
     "id": "merchant_streetfood",
-    "name": "Street Food",
+    "name": "7-Eleven Thailand",
     "logoPath": "assets/merchants/sample.svg",
     "category": "retail",
     "countryCode": "TH",
@@ -9,7 +9,7 @@
   },
   {
     "id": "merchant_minimart",
-    "name": "Minimart",
+    "name": "Lotus's Go Fresh",
     "logoPath": "assets/merchants/sample.svg",
     "category": "retail",
     "countryCode": "TH",
@@ -17,7 +17,7 @@
   },
   {
     "id": "merchant_mall",
-    "name": "Mall Retail",
+    "name": "Central Department Store",
     "logoPath": "assets/merchants/sample.svg",
     "category": "retail",
     "countryCode": "TH",
@@ -25,7 +25,7 @@
   },
   {
     "id": "merchant_pickup",
-    "name": "E-comm Pickup",
+    "name": "Shopee Xpress Point",
     "logoPath": "assets/merchants/sample.svg",
     "category": "retail",
     "countryCode": "TH",
