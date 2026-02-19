@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useState } from "react";
+import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import DeviceFrame from "../components/DeviceFrame";
 import ExplainPanel from "../components/ExplainPanel";
@@ -98,6 +98,7 @@ function HomePageContent() {
     outcomeMode: "Happy",
     latencyMultiplier: 1
   });
+  const [themeOverridesVersion, setThemeOverridesVersion] = useState(0);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -127,9 +128,13 @@ function HomePageContent() {
     setActiveUsecase(list[0]);
   }, [activeHub, pack.packId]);
 
+  const handleThemeOverridesChange = useCallback(() => {
+    setThemeOverridesVersion((prev) => prev + 1);
+  }, []);
+
   const resolvedContext = useMemo(
     () => resolveContext(pack, activeUsecase, searchParams, demo),
-    [pack, activeUsecase, searchParams, demo]
+    [pack, activeUsecase, searchParams, demo, themeOverridesVersion]
   );
 
   const flow = flowMap[pack.packId]?.[activeUsecase.flowPath] ?? flowMap.my[activeUsecase.flowPath];
@@ -171,6 +176,7 @@ function HomePageContent() {
             appLogoPath: resolvedContext.app.logoUrl,
             countryCode: countryCodeFromPackId(pack.packId)
           }}
+          onOverridesChange={handleThemeOverridesChange}
         />
         {pack.packId === "my" ? (
           <a
