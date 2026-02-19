@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import DemoControls from "./DemoControls";
 import {
   SUPPORTED_COUNTRY_CODES,
   countryCodeFromPackId,
   type SupportedCountryCode
 } from "../lib/runtime/currencyByCountry";
+import type { Demo } from "@/types/demo";
 
 type LogoMode = "url" | "upload";
 
@@ -19,10 +21,14 @@ type ThemeOverrides = {
 
 export default function ThemeStudio({
   initial,
-  onOverridesChange
+  onOverridesChange,
+  demo,
+  onDemoChange
 }: {
   initial: ThemeOverrides;
   onOverridesChange?: (overrides: ThemeOverrides) => void;
+  demo: Demo;
+  onDemoChange: (demo: Demo) => void;
 }) {
   const [overrides, setOverrides] = useState<ThemeOverrides>(initial);
   const [logoMode, setLogoMode] = useState<LogoMode>("url");
@@ -212,6 +218,13 @@ export default function ThemeStudio({
         <div className="text-sm text-ink/70">
           <p>Preview updates instantly.</p>
           {uploadError ? <p className="text-xs text-amber-700">{uploadError}</p> : null}
+        </div>
+      </div>
+      <div className="mt-6 border-t border-border pt-4">
+        <h3 className="text-sm font-semibold text-ink">Demo Controls</h3>
+        <p className="mt-1 text-xs text-ink/70">Tune network, outcome, and latency for flow simulations.</p>
+        <div className="mt-3">
+          <DemoControls demo={demo} onChange={onDemoChange} />
         </div>
       </div>
     </section>
