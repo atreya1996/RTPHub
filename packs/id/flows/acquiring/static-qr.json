@@ -52,7 +52,17 @@
         "amount": 18
       },
       "on": {
-        "DONE": "END"
+        "DONE": "flow_final_success"
+      }
+    },
+    "flow_final_success": {
+      "screen": "FlowFinalScreen",
+      "props": {
+        "status": "SUCCESS",
+        "flowLabel": "Static QR"
+      },
+      "on": {
+        "BACK_TO_HUB": "END"
       }
     }
   }

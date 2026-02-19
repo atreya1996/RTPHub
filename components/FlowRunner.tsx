@@ -14,13 +14,22 @@ export default function FlowRunner({
   demo: ResolvedContext["demo"];
 }) {
   const [stepId, setStepId] = useState(flow.entry);
+  const [lastKnownStepId, setLastKnownStepId] = useState(flow.entry);
 
   useEffect(() => {
     setStepId(flow.entry);
+    setLastKnownStepId(flow.entry);
   }, [flow.entry]);
 
   const isComplete = stepId === "END";
   const step = isComplete ? undefined : flow.steps[stepId];
+  const lastKnownStep = flow.steps[lastKnownStepId];
+
+  useEffect(() => {
+    if (step) {
+      setLastKnownStepId(stepId);
+    }
+  }, [step, stepId]);
 
   useEffect(() => {
     if (!step?.simulate) return;
@@ -43,11 +52,35 @@ export default function FlowRunner({
   }, [step]);
 
   if (isComplete) {
-    return <div className="text-sm text-ink/70">Flow complete.</div>;
+    const FlowFinalScreen = screenRegistry.FlowFinalScreen;
+    return (
+      <FlowFinalScreen
+        context={context}
+        onAction={() => setStepId(flow.entry)}
+        props={{
+          status: "SUCCESS",
+          flowLabel: flow.title,
+          txId: typeof lastKnownStep?.props?.txId === "string" ? lastKnownStep.props.txId : undefined,
+          amount: typeof lastKnownStep?.props?.amount === "number" ? lastKnownStep.props.amount : undefined,
+          reference: typeof lastKnownStep?.props?.reference === "string" ? lastKnownStep.props.reference : undefined
+        }}
+      />
+    );
   }
 
   if (!step || !ScreenComponent) {
-    return <div className="text-sm text-ink/70">Flow unavailable.</div>;
+    const FlowFinalScreen = screenRegistry.FlowFinalScreen;
+    return (
+      <FlowFinalScreen
+        context={context}
+        onAction={() => setStepId(flow.entry)}
+        props={{
+          status: "FAILURE",
+          flowLabel: flow.title,
+          reference: `Unknown state: ${stepId}`
+        }}
+      />
+    );
   }
 
   const onAction: ScreenProps["onAction"] = (event) => {

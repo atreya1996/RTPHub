@@ -39,7 +39,17 @@
         "amount": 52.8
       },
       "on": {
-        "DONE": "END"
+        "DONE": "flow_final_success"
+      }
+    },
+    "flow_final_success": {
+      "screen": "FlowFinalScreen",
+      "props": {
+        "status": "SUCCESS",
+        "flowLabel": "Dynamic QR"
+      },
+      "on": {
+        "BACK_TO_HUB": "END"
       }
     }
   }

@@ -49,14 +49,14 @@
       },
       "on": {
         "VIEW_PAID_RECEIPTS": "paid_receipts",
-        "DONE": "END"
+        "DONE": "flow_final_success"
       }
     },
     "paid_receipts": {
       "screen": "PaidReceiptsList",
       "on": {
         "OPEN_RECEIPT": "receipt_details",
-        "DONE": "END"
+        "DONE": "flow_final_success"
       }
     },
     "receipt_details": {
@@ -68,7 +68,7 @@
         "timestamp": "2026-01-18 10:33"
       },
       "on": {
-        "DONE": "END"
+        "DONE": "flow_final_success"
       }
     },
     "failed": {
@@ -81,7 +81,27 @@
         "timestamp": "2026-01-18 10:33"
       },
       "on": {
-        "DONE": "END"
+        "DONE": "flow_final_failure"
+      }
+    },
+    "flow_final_success": {
+      "screen": "FlowFinalScreen",
+      "props": {
+        "status": "SUCCESS",
+        "flowLabel": "BillBox"
+      },
+      "on": {
+        "BACK_TO_HUB": "END"
+      }
+    },
+    "flow_final_failure": {
+      "screen": "FlowFinalScreen",
+      "props": {
+        "status": "FAILURE",
+        "flowLabel": "BillBox"
+      },
+      "on": {
+        "BACK_TO_HUB": "END"
       }
     }
   }

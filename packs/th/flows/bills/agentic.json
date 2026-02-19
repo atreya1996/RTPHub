@@ -45,7 +45,7 @@
         "status": "SUCCESS"
       },
       "on": {
-        "DONE": "END"
+        "DONE": "flow_final_success"
       }
     },
     "failed": {
@@ -56,7 +56,27 @@
       },
       "on": {
         "RETRY": "processing",
-        "DONE": "END"
+        "DONE": "flow_final_failure"
+      }
+    },
+    "flow_final_success": {
+      "screen": "FlowFinalScreen",
+      "props": {
+        "status": "SUCCESS",
+        "flowLabel": "Agentic Bills"
+      },
+      "on": {
+        "BACK_TO_HUB": "END"
+      }
+    },
+    "flow_final_failure": {
+      "screen": "FlowFinalScreen",
+      "props": {
+        "status": "FAILURE",
+        "flowLabel": "Agentic Bills"
+      },
+      "on": {
+        "BACK_TO_HUB": "END"
       }
     }
   }

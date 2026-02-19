@@ -449,6 +449,37 @@ export function PaymentResult({ onAction, props, context }: ScreenProps) {
   );
 }
 
+export function FlowFinalScreen({ onAction, props, context }: ScreenProps) {
+  const normalizedStatus = typeof props?.status === "string" ? props.status.toUpperCase() : "SUCCESS";
+  const isFailure = normalizedStatus === "FAILURE" || normalizedStatus === "FAILED";
+  const heading = isFailure ? "Payment journey ended with an issue" : "Payment journey complete";
+  const amount = typeof props?.amount === "number" ? props.amount : undefined;
+  const reference = typeof props?.reference === "string" ? props.reference : undefined;
+  const transactionId = typeof props?.txId === "string" ? props.txId : undefined;
+  const flowLabel = typeof props?.flowLabel === "string" ? props.flowLabel : undefined;
+  const timestamp = new Date().toLocaleString(context.locale);
+
+  return (
+    <ScreenShell title="Flow Complete">
+      <div className="space-y-3 text-sm">
+        <div className="text-lg font-semibold text-ink">{heading}</div>
+        <div className="rounded-card border border-border bg-surface px-3 py-2.5 text-xs text-ink/80">
+          <div>Status: {isFailure ? "Failure" : "Success"}</div>
+          {flowLabel ? <div>Flow: {flowLabel}</div> : null}
+          <div>Merchant: {context.merchant?.name ?? "N/A"}</div>
+          {amount !== undefined ? <div>Amount: {formatMoney(amount, context.currency, context.locale)}</div> : null}
+          {reference ? <div>Reference: {reference}</div> : null}
+          {transactionId ? <div>Transaction ID: {transactionId}</div> : null}
+          <div>Timestamp: {timestamp}</div>
+        </div>
+        <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("BACK_TO_HUB")}>
+          Back to Payments Hub
+        </button>
+      </div>
+    </ScreenShell>
+  );
+}
+
 export function OfferApplied({ onAction }: ScreenProps) {
   return (
     <ScreenShell title="Offer Applied">
@@ -905,5 +936,6 @@ export const screenRegistry = {
   ChatAgent,
   UploadBill,
   ExtractionPreview,
-  ConfirmPayFromAgent
+  ConfirmPayFromAgent,
+  FlowFinalScreen
 };
