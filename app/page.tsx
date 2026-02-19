@@ -7,7 +7,6 @@ import ExplainPanel from "../components/ExplainPanel";
 import FlowRunner from "../components/FlowRunner";
 import HubTile from "../components/HubTile";
 import ThemeStudio from "../components/ThemeStudio";
-import DemoControls from "../components/DemoControls";
 import AppProfileHeader from "../components/AppProfileHeader";
 import type { FlowDefinition, PackManifest, UseCase } from "../lib/schema/types";
 import { getPackData, resolveContext } from "../lib/runtime/resolveContext";
@@ -177,6 +176,8 @@ function HomePageContent() {
             countryCode: countryCodeFromPackId(pack.packId)
           }}
           onOverridesChange={handleThemeOverridesChange}
+          demo={demo}
+          onDemoChange={setDemo}
         />
         {pack.packId === "my" ? (
           <a
@@ -218,7 +219,6 @@ function HomePageContent() {
               />
             ))}
           </div>
-          <DemoControls demo={demo} onChange={setDemo} />
         </div>
         <div className="flex min-h-full flex-1 flex-col gap-phone pb-safe">
           <DeviceFrame>
