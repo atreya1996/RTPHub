@@ -220,9 +220,9 @@ function HomePageContent() {
             ))}
           </div>
         </div>
-        <div className="flex min-h-full flex-1 flex-col gap-phone pb-safe">
+        <div className="flex flex-1 flex-col gap-phone">
           <DeviceFrame>
-            <div className="flex min-h-full flex-1 flex-col gap-phone pb-safe">
+            <div className="flex h-full min-h-0 flex-1 flex-col gap-phone">
               <AppProfileHeader
                 appName={resolvedContext.app.name}
                 appLogoUrl={resolvedContext.app.logoUrl}
