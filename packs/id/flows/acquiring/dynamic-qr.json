@@ -1,61 +1,44 @@
 {
   "id": "acq_dynamic_qr",
   "title": "Dynamic QR",
-  "entry": "enter_amount",
+  "entry": "invoice",
   "steps": {
-    "enter_amount": {
-      "screen": "EnterAmount",
-      "props": {
-        "suggested": [
-          25,
-          50,
-          100
-        ]
-      },
+    "invoice": {
+      "screen": "DynamicQRInvoice",
       "on": {
-        "AMOUNT_CONFIRMED": "offer"
+        "INVOICE_REVIEWED": "offer_details"
       }
     },
-    "offer": {
-      "screen": "OfferApplied",
+    "offer_details": {
+      "screen": "DynamicQROfferDetails",
       "on": {
-        "CONTINUE": "confirm"
+        "OFFERS_ACCEPTED": "authenticate"
       }
     },
-    "confirm": {
-      "screen": "ConfirmPay",
+    "authenticate": {
+      "screen": "PaymentAuthentication",
       "on": {
-        "PAY": "processing"
+        "AUTH_SUCCESS": "processing"
       }
     },
     "processing": {
       "screen": "Processing",
       "simulate": {
-        "delayMs": 1500,
+        "delayMs": 1400,
         "result": "SUCCESS"
       },
       "on": {
-        "SUCCESS": "receipt",
-        "FAILURE": "failed"
+        "SUCCESS": "receipt"
       }
     },
     "receipt": {
-      "screen": "PaymentResult",
+      "screen": "AcquiringReceipt",
       "props": {
-        "status": "SUCCESS"
+        "flowLabel": "Dynamic QR",
+        "txId": "ID-DQR-24001",
+        "amount": 52.8
       },
       "on": {
-        "DONE": "END"
-      }
-    },
-    "failed": {
-      "screen": "PaymentResult",
-      "props": {
-        "status": "FAILED",
-        "retry": true
-      },
-      "on": {
-        "RETRY": "processing",
         "DONE": "END"
       }
     }
