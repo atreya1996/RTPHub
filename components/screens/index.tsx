@@ -16,6 +16,7 @@ type BillItem = {
   id: string;
   label: string;
   helper: string;
+  reference: string;
   amount: number;
   category: BillCategory;
 };
@@ -76,6 +77,7 @@ function getBillItems(locale: string): BillItem[] {
       id: "biller_tng_electricity",
       label: "TNG Electricity Bill",
       helper: "Electricity • Due in 2 days",
+      reference: "ELEC-1182-4041",
       amount: 182.3,
       category: "electricity"
     },
@@ -83,6 +85,7 @@ function getBillItems(locale: string): BillItem[] {
       id: "biller_celcomdigi_postpaid",
       label: "CelcomDigi Postpaid",
       helper: "Mobile postpaid • Due tomorrow",
+      reference: "MOB-7719-2250",
       amount: 96,
       category: "mobile"
     },
@@ -90,6 +93,7 @@ function getBillItems(locale: string): BillItem[] {
       id: "biller_mobile_prepaid_topup",
       label: "Mobile Prepaid Top-up",
       helper: "Mobile prepaid • Quick reload",
+      reference: "TOPUP-3355-9001",
       amount: 30,
       category: "mobile"
     },
@@ -97,6 +101,7 @@ function getBillItems(locale: string): BillItem[] {
       id: "biller_land_tax",
       label: "Land Tax",
       helper: "Government dues • Annual",
+      reference: "TAX-9004-7711",
       amount: 220,
       category: "government"
     },
@@ -104,10 +109,21 @@ function getBillItems(locale: string): BillItem[] {
       id: "biller_rfid_reload",
       label: `${rfidLabel} Balance Reload`,
       helper: `${rfidLabel} toll tag • Low balance`,
+      reference: "RFID-2408-9130",
       amount: 50,
       category: "rfid"
     }
   ];
+}
+
+function getBillMeta(context: ResolvedContext, props?: Record<string, unknown>) {
+  const bills = getBillItems(context.locale);
+  const fallback = bills[0];
+  const amount = typeof props?.amount === "number" ? props.amount : fallback.amount;
+  const biller = typeof props?.biller === "string" ? props.biller : fallback.label;
+  const reference = typeof props?.reference === "string" ? props.reference : fallback.reference;
+  const timestamp = typeof props?.timestamp === "string" ? props.timestamp : new Date().toLocaleString(context.locale);
+  return { amount, biller, reference, timestamp };
 }
 
 const MENU_ITEMS: Array<{ key: BottomMenuKey; label: string; path: string }> = [
@@ -524,34 +540,114 @@ export function CollectRequestInbox({ onAction }: ScreenProps) {
   );
 }
 
-export function BillBoxHome({ onAction, context }: ScreenProps) {
+export function BillInbox({ onAction, context }: ScreenProps) {
   const bills = getBillItems(context.locale);
+  const [selectedId, setSelectedId] = useState(bills[0]?.id ?? "");
+  const selectedBill = bills.find((item) => item.id === selectedId) ?? bills[0];
+
   return (
-    <ScreenShell title="BillBox Home" bottomNav={<BottomNavigation active="bills" />}>
+    <ScreenShell title="Bill Inbox" bottomNav={<BottomNavigation active="bills" />}>
       <div className="space-y-3 text-sm">
-        <div>{bills.length} bills due this week.</div>
+        <div>{bills.length} bills due this week. Select one to review details and pay instantly.</div>
         <div className="space-y-2">
           {bills.map((item) => (
-            <BillListItem key={item.id} item={item} />
+            <button
+              key={item.id}
+              className={`w-full rounded-card border p-0 text-left ${selectedBill.id === item.id ? "border-primary/70" : "border-transparent"}`}
+              onClick={() => setSelectedId(item.id)}
+              aria-label={`Review ${item.label}`}
+            >
+              <BillListItem item={item} />
+            </button>
           ))}
         </div>
-        <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("OPEN_BILL")}
+
+        <div className="rounded-card border border-border bg-surface px-3 py-2.5 text-xs text-ink/80">
+          <div className="text-sm font-semibold text-ink">Quick details</div>
+          <div className="mt-1.5">Biller: {selectedBill.label}</div>
+          <div>Reference: {selectedBill.reference}</div>
+          <div>Amount: {formatMoney(selectedBill.amount, context.currency, context.locale)}</div>
+          <div>Timestamp: {new Date().toLocaleString(context.locale)}</div>
+        </div>
+
+        <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("PAY_SELECTED")}
         >
-          Open bill
+          Pay selected bill
         </button>
       </div>
     </ScreenShell>
   );
 }
 
-export function BillDetails({ onAction }: ScreenProps) {
+export function BillPaymentConfirmation({ onAction, context, props }: ScreenProps) {
+  const { amount, biller, reference, timestamp } = getBillMeta(context, props);
   return (
-    <ScreenShell title="Bill Details" bottomNav={<BottomNavigation active="bills" />}>
+    <ScreenShell title="Bill Payment Confirmation" bottomNav={<BottomNavigation active="bills" />}>
       <div className="space-y-3 text-sm">
-        <div>Amount due today.</div>
-        <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("PAY")}>
-          Pay bill
+        <div className="rounded-card border border-border bg-surface px-3 py-2.5 text-xs text-ink/80">
+          <div className="text-sm font-semibold text-ink">Confirm this bill payment</div>
+          <div className="mt-1.5">Biller: {biller}</div>
+          <div>Reference: {reference}</div>
+          <div>Amount: {formatMoney(amount, context.currency, context.locale)}</div>
+          <div>Timestamp: {timestamp}</div>
+        </div>
+        <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("CONFIRM")}>Confirm and authenticate
         </button>
+      </div>
+    </ScreenShell>
+  );
+}
+
+export function BillPaymentReceipt({ onAction, context, props }: ScreenProps) {
+  const { amount, biller, reference, timestamp } = getBillMeta(context, props);
+  const status = typeof props?.status === "string" ? props.status : "SUCCESS";
+  return (
+    <ScreenShell title="Bill Payment Receipt" bottomNav={<BottomNavigation active="bills" />}>
+      <div className="space-y-3 text-sm">
+        <div className="text-lg font-semibold text-ink">{status === "SUCCESS" ? "Bill paid successfully" : "Bill payment failed"}</div>
+        <div className="rounded-card border border-border bg-surface px-3 py-2.5 text-xs text-ink/80">
+          <div>Biller: {biller}</div>
+          <div>Reference: {reference}</div>
+          <div>Amount: {formatMoney(amount, context.currency, context.locale)}</div>
+          <div>Timestamp: {timestamp}</div>
+        </div>
+        <div className="flex gap-2">
+          <button className="min-h-11 rounded-button border border-border bg-surface px-4 py-2.5 text-sm font-semibold text-ink" onClick={() => onAction("VIEW_PAID_RECEIPTS")}>View paid receipts</button>
+          <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("DONE")}>Done</button>
+        </div>
+      </div>
+    </ScreenShell>
+  );
+}
+
+export function PaidReceiptsList({ onAction, context }: ScreenProps) {
+  const receipts = getBillItems(context.locale).slice(0, 3);
+  return (
+    <ScreenShell title="Paid Bill Receipts" bottomNav={<BottomNavigation active="bills" />}>
+      <div className="space-y-2 text-sm">
+        {receipts.map((item) => (
+          <button key={item.id} className="w-full rounded-card border border-border bg-surface px-3 py-2 text-left" onClick={() => onAction("OPEN_RECEIPT")}> 
+            <div className="font-medium text-ink">{item.label}</div>
+            <div className="text-xs text-ink/70">Ref: {item.reference} • {formatMoney(item.amount, context.currency, context.locale)}</div>
+          </button>
+        ))}
+      </div>
+    </ScreenShell>
+  );
+}
+
+export function PaidReceiptDetails({ onAction, context, props }: ScreenProps) {
+  const { amount, biller, reference, timestamp } = getBillMeta(context, props);
+  return (
+    <ScreenShell title="Receipt Details" bottomNav={<BottomNavigation active="bills" />}>
+      <div className="space-y-3 text-sm">
+        <div className="rounded-card border border-border bg-surface px-3 py-2.5 text-xs text-ink/80">
+          <div>Biller: {biller}</div>
+          <div>Reference: {reference}</div>
+          <div>Amount: {formatMoney(amount, context.currency, context.locale)}</div>
+          <div>Timestamp: {timestamp}</div>
+        </div>
+        <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("DONE")}>Back to inbox</button>
       </div>
     </ScreenShell>
   );
@@ -798,8 +894,11 @@ export const screenRegistry = {
   MandateSetup,
   MandateList,
   CollectRequestInbox,
-  BillBoxHome,
-  BillDetails,
+  BillInbox,
+  BillPaymentConfirmation,
+  BillPaymentReceipt,
+  PaidReceiptsList,
+  PaidReceiptDetails,
   PayAllBills,
   AutopayRulesBuilder,
   ExecutionResultsList,
