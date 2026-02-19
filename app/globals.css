@@ -14,9 +14,26 @@
   --radius-card: 16px;
   --radius-button: 14px;
   --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.08);
+  --phone-top-inset: 1.5rem;
+  --phone-content-gap: 1.5rem;
+  --phone-bottom-safe: calc(1.5rem + env(safe-area-inset-bottom));
 }
 
 body {
   color: var(--color-ink);
   background: var(--color-bg);
+}
+
+@layer utilities {
+  .pt-phone {
+    padding-top: var(--phone-top-inset);
+  }
+
+  .pb-safe {
+    padding-bottom: var(--phone-bottom-safe);
+  }
+
+  .gap-phone {
+    gap: var(--phone-content-gap);
+  }
 }
