@@ -31,6 +31,23 @@ function resolvePackAssetPath(packId: string, assetPath?: string): string {
   return `/packs/${packId}/${assetPath}`;
 }
 
+function resolveAppLogoUrl(packId: string, packLogoPath: string | undefined, overrides: ReturnType<typeof readStoredOverrides> & ReturnType<typeof readQueryOverrides>): string {
+  const defaultLogoUrl = resolvePackAssetPath(packId, packLogoPath);
+  const mode = overrides.appLogoMode;
+
+  if (mode === "upload") {
+    if (overrides.appLogoUploadDataUrl?.startsWith("data:image/")) {
+      return overrides.appLogoUploadDataUrl;
+    }
+    if (overrides.appLogoPath && !overrides.appLogoPath.startsWith("blob:")) {
+      return overrides.appLogoPath;
+    }
+    return defaultLogoUrl;
+  }
+
+  return overrides.appLogoPath ?? defaultLogoUrl;
+}
+
 const packData = {
   my: {
     merchants: myMerchants,
@@ -94,7 +111,7 @@ export function resolveContext(
   return {
     app: {
       name: overrides.appName ?? pack.appIdentity.name,
-      logoUrl: overrides.appLogoPath ?? resolvePackAssetPath(pack.packId, pack.appIdentity.logoPath)
+      logoUrl: resolveAppLogoUrl(pack.packId, pack.appIdentity.logoPath, overrides)
     },
     locale: pack.defaultLocale,
     currency,
