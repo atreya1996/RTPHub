@@ -4,6 +4,8 @@ import { currencyByCountry, isSupportedCountryCode } from "./currencyByCountry";
 export type ThemeOverrides = {
   appName?: string;
   appLogoPath?: string;
+  appLogoMode?: "url" | "upload";
+  appLogoUploadDataUrl?: string;
   countryCode?: string;
 };
 
