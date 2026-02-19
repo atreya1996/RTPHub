@@ -210,9 +210,9 @@ export default function HomePage() {
           </div>
           <DemoControls demo={demo} onChange={setDemo} />
         </div>
-        <div className="space-y-4">
+        <div className="flex min-h-full flex-1 flex-col gap-phone pb-safe">
           <DeviceFrame>
-            <div className="space-y-4">
+            <div className="flex min-h-full flex-1 flex-col gap-phone pb-safe">
               <div className="flex items-center gap-3">
                 <img src={resolvedContext.app.logoUrl} alt="App logo" className="h-10 w-10 rounded-full" />
                 <div>
