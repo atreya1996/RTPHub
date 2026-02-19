@@ -1,4 +1,5 @@
 import ScreenShell from "./ScreenShell";
+import { useMemo, useState } from "react";
 import type { ResolvedContext } from "../../lib/schema/types";
 import { formatMoney } from "../../lib/runtime/formatMoney";
 
@@ -389,19 +390,136 @@ export function ExecutionResultsList({ onAction }: ScreenProps) {
 }
 
 export function ChatAgent({ onAction }: ScreenProps) {
+  const [draft, setDraft] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [showAttachmentOptions, setShowAttachmentOptions] = useState(false);
+  const [selectedAttachment, setSelectedAttachment] = useState<string | null>(null);
+
+  const canSend = draft.trim().length > 0 && !isLoading;
+  const composerStateLabel = useMemo(() => {
+    if (isLoading) return "Disabled/loading";
+    if (selectedAttachment) return "Attachment selected";
+    if (draft.trim().length > 0) return "Typing";
+    return "Empty";
+  }, [draft, isLoading, selectedAttachment]);
+
+  const attachmentOptions = [
+    { id: "camera", label: "Take photo" },
+    { id: "gallery", label: "Choose from gallery" },
+    { id: "file", label: "Upload file/document" }
+  ];
+
+  function handleAttachmentSelect(label: string) {
+    setSelectedAttachment(label);
+    setShowAttachmentOptions(false);
+  }
+
+  function handleSend() {
+    if (!canSend) return;
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+      setDraft("");
+      setSelectedAttachment(null);
+      onAction("CONFIRM");
+    }, 900);
+  }
+
   return (
     <ScreenShell title="Agentic Chat" bottomNav={<BottomNavigation active="home" />}>
-      <div className="space-y-3 text-sm">
-        <div className="rounded-card border border-border bg-surface p-3">
-          Hi! I can pay bills or extract uploaded invoices.
+      <div className="flex h-[440px] min-h-0 flex-col rounded-[1rem] border border-border/80 bg-surface/40 text-sm">
+        <div className="flex items-center justify-between border-b border-border/80 px-4 py-3">
+          <div>
+            <p className="text-sm font-semibold text-ink">Bills Assistant</p>
+            <p className="text-xs text-ink/60">Connected to JomPay</p>
+          </div>
+          <span className="rounded-full bg-white px-2 py-1 text-[11px] font-medium text-ink/70">Online</span>
         </div>
-        <div className="flex gap-2">
-          <button className="rounded-button border border-border px-3 py-2 text-sm" onClick={() => onAction("UPLOAD")}>
-            Upload bill
-          </button>
-          <button className="rounded-button bg-primary px-3 py-2 text-sm text-white" onClick={() => onAction("CONFIRM")}>
-            Confirm payment
-          </button>
+
+        <div className="min-h-0 flex-1 space-y-3 overflow-y-auto px-3 py-4">
+          <div className="flex justify-start">
+            <div className="max-w-[82%] rounded-2xl rounded-tl-md border border-[#b8e5d8] bg-[#e7fff7] px-3 py-2 text-ink">
+              Hi! I can pay bills, parse invoices, and remind you before due dates.
+            </div>
+          </div>
+          <div className="flex justify-end">
+            <div className="max-w-[82%] rounded-2xl rounded-tr-md bg-primary px-3 py-2 text-white">
+              Help me settle my electricity and mobile bills this week.
+            </div>
+          </div>
+          <div className="flex justify-start">
+            <div className="max-w-[82%] rounded-2xl rounded-tl-md border border-[#b8e5d8] bg-[#e7fff7] px-3 py-2 text-ink">
+              Sure — upload your invoice or pick an action below.
+            </div>
+          </div>
+        </div>
+
+        <div className="border-t border-border/80 px-3 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
+          <div className="mb-3 flex flex-wrap gap-2">
+            <button className="rounded-full border border-border bg-white px-3 py-1.5 text-xs text-ink/70" onClick={() => onAction("UPLOAD")}>
+              Upload bill
+            </button>
+            <button className="rounded-full border border-border bg-white px-3 py-1.5 text-xs text-ink/70" onClick={() => setDraft("Summarize my due bills")}>
+              Summarize dues
+            </button>
+            <button className="rounded-full border border-border bg-white px-3 py-1.5 text-xs text-ink/70" onClick={() => onAction("CONFIRM")}>
+              Confirm payment
+            </button>
+          </div>
+
+          {selectedAttachment ? (
+            <div className="mb-2 rounded-xl border border-border bg-white px-3 py-2 text-xs text-ink/70">Attached: {selectedAttachment}</div>
+          ) : null}
+
+          {showAttachmentOptions ? (
+            <div className="mb-2 rounded-xl border border-border bg-white p-2 shadow-sm">
+              {attachmentOptions.map((option) => (
+                <button
+                  key={option.id}
+                  className="flex w-full items-center justify-start rounded-lg px-2 py-2 text-left text-xs text-ink/80 hover:bg-surface"
+                  aria-label={option.label}
+                  onClick={() => handleAttachmentSelect(option.label)}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+          ) : null}
+
+          <div className="flex items-center gap-2">
+            <button
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-white text-ink"
+              aria-label="Add attachment"
+              onClick={() => setShowAttachmentOptions((value) => !value)}
+              disabled={isLoading}
+            >
+              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8">
+                <path d="M12 5v14M5 12h14" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+            <input
+              value={draft}
+              onChange={(event) => setDraft(event.target.value)}
+              placeholder="Message Bills Assistant..."
+              aria-label="Message Bills Assistant"
+              disabled={isLoading}
+              className="h-10 flex-1 rounded-full border border-border bg-white px-3 text-xs text-ink outline-none placeholder:text-ink/50 focus:ring-2 focus:ring-primary/30 disabled:opacity-70"
+            />
+            <button
+              className={`inline-flex h-10 w-10 items-center justify-center rounded-full text-white ${
+                canSend ? "bg-primary" : "bg-primary/40"
+              }`}
+              onClick={handleSend}
+              disabled={!canSend}
+              aria-label="Send message"
+            >
+              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="m5 12 14-7-4 7 4 7-14-7Z" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+          </div>
+
+          <p className="mt-2 px-1 text-[11px] text-ink/55">Composer state: {composerStateLabel}</p>
         </div>
       </div>
     </ScreenShell>
