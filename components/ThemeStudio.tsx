@@ -17,7 +17,13 @@ type ThemeOverrides = {
   appLogoUploadDataUrl?: string;
 };
 
-export default function ThemeStudio({ initial }: { initial: ThemeOverrides }) {
+export default function ThemeStudio({
+  initial,
+  onOverridesChange
+}: {
+  initial: ThemeOverrides;
+  onOverridesChange?: (overrides: ThemeOverrides) => void;
+}) {
   const [overrides, setOverrides] = useState<ThemeOverrides>(initial);
   const [logoMode, setLogoMode] = useState<LogoMode>("url");
   const [uploadDataUrl, setUploadDataUrl] = useState("");
@@ -44,17 +50,15 @@ export default function ThemeStudio({ initial }: { initial: ThemeOverrides }) {
   }, []);
 
   useEffect(() => {
-    window.localStorage.setItem(
-      "themeStudioOverrides",
-      JSON.stringify({
-        appName: overrides.appName,
-        appLogoPath: overrides.appLogoPath,
-        appLogoMode: logoMode,
-        appLogoUploadDataUrl: uploadDataUrl || undefined,
-        countryCode: overrides.countryCode
-      })
-    );
-  }, [logoMode, overrides, uploadDataUrl]);
+    const nextOverrides = {
+      ...overrides,
+      appLogoMode: logoMode,
+      appLogoUploadDataUrl: uploadDataUrl || undefined
+    };
+
+    window.localStorage.setItem("themeStudioOverrides", JSON.stringify(nextOverrides));
+    onOverridesChange?.(nextOverrides);
+  }, [logoMode, onOverridesChange, overrides, uploadDataUrl]);
 
   useEffect(
     () => () => {
