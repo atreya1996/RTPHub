@@ -8,6 +8,45 @@ export type ScreenProps = {
   props?: Record<string, unknown>;
 };
 
+type BottomMenuKey = "home" | "bills" | "scan" | "wallet" | "profile";
+
+function MenuIcon({ path }: { path: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+      <path d={path} strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+const MENU_ITEMS: Array<{ key: BottomMenuKey; label: string; path: string }> = [
+  { key: "home", label: "Home", path: "M3 10.5 12 4l9 6.5V20a1 1 0 0 1-1 1h-5.5v-6h-5v6H4a1 1 0 0 1-1-1v-9.5Z" },
+  { key: "bills", label: "Bills", path: "M7 4h10a2 2 0 0 1 2 2v14l-3-1.5L13 20l-3-1.5L7 20V6a2 2 0 0 1 2-2Z" },
+  { key: "scan", label: "Scan/Pay", path: "M8 4H5a1 1 0 0 0-1 1v3m15-4h-3a1 1 0 0 0-1 1v3m4 11v-3a1 1 0 0 0-1-1h-3m-7 4H5a1 1 0 0 1-1-1v-3" },
+  { key: "wallet", label: "Wallet", path: "M4 8h16a1 1 0 0 1 1 1v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a1 1 0 0 1 1-1Zm0 0V7a3 3 0 0 1 3-3h9" },
+  { key: "profile", label: "Help", path: "M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm-3-6a3 3 0 0 1 6 0m-3-3.5h.01" }
+];
+
+function BottomNavigation({ active }: { active: BottomMenuKey }) {
+  return (
+    <div className="grid grid-cols-5 gap-1">
+      {MENU_ITEMS.map((item) => {
+        const isActive = item.key === active;
+        return (
+          <div
+            key={item.key}
+            className={`flex flex-col items-center gap-1 rounded-xl px-1 py-2 text-[11px] font-medium ${
+              isActive ? "bg-[#00f5a8] text-[#025a50] shadow-sm" : "text-[#0f6d63]"
+            }`}
+          >
+            <MenuIcon path={item.path} />
+            <span>{item.label}</span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 export function ScanQR({ onAction }: ScreenProps) {
   return (
     <ScreenShell title="Scan QR">
@@ -189,7 +228,7 @@ export function CollectRequestInbox({ onAction }: ScreenProps) {
 
 export function BillBoxHome({ onAction }: ScreenProps) {
   return (
-    <ScreenShell title="BillBox Home">
+    <ScreenShell title="BillBox Home" bottomNav={<BottomNavigation active="bills" />}>
       <div className="space-y-3 text-sm">
         <div>3 bills due this week.</div>
         <button className="rounded-button bg-primary px-3 py-2 text-sm text-white" onClick={() => onAction("OPEN_BILL")}
@@ -203,7 +242,7 @@ export function BillBoxHome({ onAction }: ScreenProps) {
 
 export function BillDetails({ onAction }: ScreenProps) {
   return (
-    <ScreenShell title="Bill Details">
+    <ScreenShell title="Bill Details" bottomNav={<BottomNavigation active="bills" />}>
       <div className="space-y-3 text-sm">
         <div>Amount due today.</div>
         <button className="rounded-button bg-primary px-3 py-2 text-sm text-white" onClick={() => onAction("PAY")}>
@@ -216,7 +255,7 @@ export function BillDetails({ onAction }: ScreenProps) {
 
 export function PayAllBills({ onAction }: ScreenProps) {
   return (
-    <ScreenShell title="Pay All Bills">
+    <ScreenShell title="Pay All Bills" bottomNav={<BottomNavigation active="scan" />}>
       <div className="space-y-3 text-sm">
         <div>2 bills selected for payment.</div>
         <button className="rounded-button bg-primary px-3 py-2 text-sm text-white" onClick={() => onAction("PAY_ALL")}>
@@ -255,7 +294,7 @@ export function ExecutionResultsList({ onAction }: ScreenProps) {
 
 export function ChatAgent({ onAction }: ScreenProps) {
   return (
-    <ScreenShell title="Agentic Chat">
+    <ScreenShell title="Agentic Chat" bottomNav={<BottomNavigation active="home" />}>
       <div className="space-y-3 text-sm">
         <div className="rounded-card border border-border bg-surface p-3">
           Hi! I can pay bills or extract uploaded invoices.
@@ -275,7 +314,7 @@ export function ChatAgent({ onAction }: ScreenProps) {
 
 export function UploadBill({ onAction }: ScreenProps) {
   return (
-    <ScreenShell title="Upload Bill">
+    <ScreenShell title="Upload Bill" bottomNav={<BottomNavigation active="scan" />}>
       <div className="space-y-3 text-sm">
         <div className="h-24 rounded-card border border-dashed border-border" />
         <button className="rounded-button bg-primary px-3 py-2 text-sm text-white" onClick={() => onAction("EXTRACT")}>
@@ -288,7 +327,7 @@ export function UploadBill({ onAction }: ScreenProps) {
 
 export function ExtractionPreview({ onAction }: ScreenProps) {
   return (
-    <ScreenShell title="Extraction Preview">
+    <ScreenShell title="Extraction Preview" bottomNav={<BottomNavigation active="bills" />}>
       <div className="space-y-3 text-sm">
         <div>Invoice extracted with due date and total.</div>
         <button className="rounded-button bg-primary px-3 py-2 text-sm text-white" onClick={() => onAction("CONFIRM")}>
@@ -301,7 +340,7 @@ export function ExtractionPreview({ onAction }: ScreenProps) {
 
 export function ConfirmPayFromAgent({ onAction }: ScreenProps) {
   return (
-    <ScreenShell title="Confirm from Agent">
+    <ScreenShell title="Confirm from Agent" bottomNav={<BottomNavigation active="scan" />}>
       <div className="space-y-3 text-sm">
         <div>Paying recommended bill from agent.</div>
         <button className="rounded-button bg-primary px-3 py-2 text-sm text-white" onClick={() => onAction("PAY")}>
