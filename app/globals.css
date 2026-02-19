@@ -3,25 +3,86 @@
 @tailwind utilities;
 
 :root {
-  --color-primary: #20d39c;
-  --color-accent1: #ffaa37;
-  --color-accent2: #836cf4;
-  --color-ink: #003323;
-  --color-bg: #ffffff;
-  --color-surface: #f7faf9;
-  --color-border: rgba(0, 51, 35, 0.12);
-  --font-family: system-ui;
-  --radius-card: 16px;
-  --radius-button: 14px;
-  --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.08);
+  --color-primary: #00a88f;
+  --color-primary-strong: #007a68;
+  --color-primary-soft: #d7fff3;
+  --color-accent-lime: #b6ef3b;
+  --color-accent1: #b6ef3b;
+  --color-accent2: #4dd8bf;
+  --color-ink: #0b2f2b;
+  --color-bg: #f4fbf9;
+  --color-surface: #ffffff;
+  --color-border: rgba(11, 47, 43, 0.14);
+  --font-family: "Inter Display", "Inter", system-ui, -apple-system, sans-serif;
+  --radius-card: 14px;
+  --radius-button: 12px;
+  --radius-chip: 999px;
+  --shadow-card: 0 8px 20px rgba(8, 33, 29, 0.08);
+  --shadow-interactive: 0 4px 10px rgba(8, 33, 29, 0.12);
   --phone-top-inset: 1.5rem;
   --phone-content-gap: 1.5rem;
   --phone-bottom-safe: calc(1.5rem + env(safe-area-inset-bottom));
 }
 
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #061310;
+    --color-surface: #0f2320;
+    --color-ink: #e8f6f2;
+    --color-border: rgba(216, 242, 236, 0.2);
+    --shadow-card: 0 10px 26px rgba(0, 0, 0, 0.35);
+    --shadow-interactive: 0 8px 18px rgba(0, 0, 0, 0.4);
+  }
+}
+
 body {
   color: var(--color-ink);
   background: var(--color-bg);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+@layer base {
+  h1 {
+    @apply text-2xl font-semibold tracking-tight;
+  }
+
+  h2 {
+    @apply text-xl font-semibold tracking-tight;
+  }
+
+  h3 {
+    @apply text-lg font-semibold;
+  }
+
+  p {
+    @apply text-sm leading-6;
+  }
+
+  button,
+  [role="button"] {
+    min-height: 44px;
+  }
+}
+
+@layer components {
+  .text-heading {
+    @apply text-base font-semibold tracking-tight text-ink;
+  }
+
+  .text-body {
+    @apply text-sm font-normal leading-6 text-ink;
+    opacity: 0.8;
+  }
+
+  .surface-card {
+    @apply rounded-card border border-border bg-surface shadow-card;
+  }
+
+  .pill-chip {
+    @apply rounded-full border border-border bg-surface px-3 py-1 text-xs font-medium text-ink;
+    opacity: 0.8;
+  }
 }
 
 @layer utilities {
