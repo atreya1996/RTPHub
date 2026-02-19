@@ -1,10 +1,12 @@
 "use client";
 
-import type { ResolvedContext } from "../lib/schema/types";
+import React from "react";
+
+import type { Demo } from "@/types/demo";
 
 type DemoControlsProps = {
-  demo: ResolvedContext["demo"];
-  onChange: (demo: ResolvedContext["demo"]) => void;
+  demo: Demo;
+  onChange: React.Dispatch<React.SetStateAction<Demo>> | ((demo: Demo) => void);
 };
 
 export default function DemoControls({ demo, onChange }: DemoControlsProps) {
