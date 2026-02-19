@@ -1,5 +1,5 @@
 import ScreenShell from "./ScreenShell";
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import type { ResolvedContext } from "../../lib/schema/types";
 import { formatMoney } from "../../lib/runtime/formatMoney";
 
@@ -602,11 +602,16 @@ export function ExecutionResultsList({ onAction }: ScreenProps) {
   );
 }
 
-export function ChatAgent({ onAction }: ScreenProps) {
+type ChatAgentMode = "default" | "fetch" | "ingested" | "confirm" | "success" | "failure";
+
+export function ChatAgent({ onAction, props }: ScreenProps) {
   const [draft, setDraft] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showAttachmentOptions, setShowAttachmentOptions] = useState(false);
   const [selectedAttachment, setSelectedAttachment] = useState<string | null>(null);
+  const mode = (props?.mode as ChatAgentMode) ?? "default";
+  const attachmentType = (props?.attachmentType as string) ?? "Photo invoice";
+  const receiptId = (props?.receiptId as string) ?? "RCT-2026-00182";
 
   const canSend = draft.trim().length > 0 && !isLoading;
   const composerStateLabel = useMemo(() => {
@@ -634,9 +639,71 @@ export function ChatAgent({ onAction }: ScreenProps) {
       setIsLoading(false);
       setDraft("");
       setSelectedAttachment(null);
+      if (mode === "fetch") {
+        onAction("BILLS_FETCHED");
+        return;
+      }
       onAction("CONFIRM");
     }, 900);
   }
+
+  const inlineCards: Record<ChatAgentMode, ReactNode> = {
+    default: null,
+    fetch: (
+      <>
+        <div className="flex justify-end">
+          <div className="max-w-[82%] rounded-2xl rounded-tr-md bg-primary px-3 py-2 text-white">Fetch my bills</div>
+        </div>
+        <div className="flex justify-start">
+          <div className="max-w-[88%] space-y-2 rounded-2xl rounded-tl-md border border-[#b8e5d8] bg-[#e7fff7] px-3 py-2 text-ink">
+            <p>I found 4 due bills totalling 548.30. Ready to continue with bill selection summary.</p>
+            <button className="rounded-button bg-primary px-3 py-1.5 text-xs font-semibold text-white" onClick={() => onAction("BILLS_FETCHED")}>Continue</button>
+          </div>
+        </div>
+      </>
+    ),
+    ingested: (
+      <div className="flex justify-start">
+        <div className="max-w-[88%] space-y-2 rounded-2xl rounded-tl-md border border-[#b8e5d8] bg-[#e7fff7] px-3 py-2 text-ink">
+          <p>{attachmentType} ingested. Extracted biller, due date, and amount successfully.</p>
+          <button className="rounded-button bg-primary px-3 py-1.5 text-xs font-semibold text-white" onClick={() => onAction("EXTRACTION_CONFIRMED")}>Use extracted bill</button>
+        </div>
+      </div>
+    ),
+    confirm: (
+      <div className="flex justify-start">
+        <div className="max-w-[88%] space-y-2 rounded-2xl rounded-tl-md border border-amber-200 bg-amber-50 px-3 py-2 text-ink">
+          <p>Confirm payment of 278.30 for Electricity + Mobile bills?</p>
+          <div className="flex gap-2">
+            <button className="rounded-button border border-border bg-white px-3 py-1.5 text-xs font-semibold text-ink" onClick={() => onAction("CANCEL")}>Cancel</button>
+            <button className="rounded-button bg-primary px-3 py-1.5 text-xs font-semibold text-white" onClick={() => onAction("PAY")}>Pay now</button>
+          </div>
+        </div>
+      </div>
+    ),
+    success: (
+      <div className="flex justify-start">
+        <div className="max-w-[88%] space-y-2 rounded-2xl rounded-tl-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-ink">
+          <p>Payment successful. Receipt {receiptId} is ready.</p>
+          <div className="flex gap-2">
+            <button className="rounded-button border border-border bg-white px-3 py-1.5 text-xs font-semibold text-ink" onClick={() => onAction("DONE")}>Done</button>
+            <button className="rounded-button bg-primary px-3 py-1.5 text-xs font-semibold text-white" onClick={() => onAction("OPEN_RECEIPT")}>Open receipt</button>
+          </div>
+        </div>
+      </div>
+    ),
+    failure: (
+      <div className="flex justify-start">
+        <div className="max-w-[88%] space-y-2 rounded-2xl rounded-tl-md border border-rose-200 bg-rose-50 px-3 py-2 text-ink">
+          <p>Payment failed due to a temporary network timeout.</p>
+          <div className="flex gap-2">
+            <button className="rounded-button border border-border bg-white px-3 py-1.5 text-xs font-semibold text-ink" onClick={() => onAction("DONE")}>Close</button>
+            <button className="rounded-button bg-primary px-3 py-1.5 text-xs font-semibold text-white" onClick={() => onAction("RETRY")}>Retry payment</button>
+          </div>
+        </div>
+      </div>
+    )
+  };
 
   return (
     <ScreenShell title="Agentic Chat" bottomNav={<BottomNavigation active="home" />}>
@@ -665,6 +732,7 @@ export function ChatAgent({ onAction }: ScreenProps) {
               Sure — upload your invoice or pick an action below.
             </div>
           </div>
+          {inlineCards[mode]}
         </div>
 
         <div className="border-t border-border/80 px-3 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
@@ -672,7 +740,7 @@ export function ChatAgent({ onAction }: ScreenProps) {
             <button className="rounded-full border border-border bg-white px-3 py-1.5 text-xs text-ink/70" onClick={() => onAction("UPLOAD")}>
               Upload bill
             </button>
-            <button className="rounded-full border border-border bg-white px-3 py-1.5 text-xs text-ink/70" onClick={() => setDraft("Summarize my due bills")}>
+            <button className="rounded-full border border-border bg-white px-3 py-1.5 text-xs text-ink/70" onClick={() => onAction("FETCH_BILLS")}>
               Summarize dues
             </button>
             <button className="rounded-full border border-border bg-white px-3 py-1.5 text-xs text-ink/70" onClick={() => onAction("CONFIRM")}>
@@ -739,45 +807,6 @@ export function ChatAgent({ onAction }: ScreenProps) {
   );
 }
 
-export function UploadBill({ onAction }: ScreenProps) {
-  return (
-    <ScreenShell title="Upload Bill" bottomNav={<BottomNavigation active="scan" />}>
-      <div className="space-y-3 text-sm">
-        <div className="h-24 rounded-card border border-dashed border-border" />
-        <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("EXTRACT")}>
-          Extract details
-        </button>
-      </div>
-    </ScreenShell>
-  );
-}
-
-export function ExtractionPreview({ onAction }: ScreenProps) {
-  return (
-    <ScreenShell title="Extraction Preview" bottomNav={<BottomNavigation active="bills" />}>
-      <div className="space-y-3 text-sm">
-        <div>Invoice extracted with due date and total.</div>
-        <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("CONFIRM")}>
-          Confirm
-        </button>
-      </div>
-    </ScreenShell>
-  );
-}
-
-export function ConfirmPayFromAgent({ onAction }: ScreenProps) {
-  return (
-    <ScreenShell title="Confirm from Agent" bottomNav={<BottomNavigation active="scan" />}>
-      <div className="space-y-3 text-sm">
-        <div>Paying recommended bill from agent.</div>
-        <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("PAY")}>
-          Pay now
-        </button>
-      </div>
-    </ScreenShell>
-  );
-}
-
 export const screenRegistry = {
   ScanQR,
   EnterAmount,
@@ -803,8 +832,5 @@ export const screenRegistry = {
   PayAllBills,
   AutopayRulesBuilder,
   ExecutionResultsList,
-  ChatAgent,
-  UploadBill,
-  ExtractionPreview,
-  ConfirmPayFromAgent
+  ChatAgent
 };

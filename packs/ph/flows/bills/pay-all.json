@@ -1,16 +1,31 @@
 {
   "id": "bills_pay_all",
   "title": "Pay All Bills",
-  "entry": "pay_all",
+  "entry": "selection_summary",
   "steps": {
-    "pay_all": {
+    "selection_summary": {
       "screen": "PayAllBills",
       "on": {
-        "PAY_ALL": "results"
+        "PAY_ALL": "auth"
       }
     },
-    "results": {
-      "screen": "ExecutionResultsList",
+    "auth": {
+      "screen": "PaymentAuthentication",
+      "on": {
+        "AUTH_SUCCESS": "payment_confirmation"
+      }
+    },
+    "payment_confirmation": {
+      "screen": "PaymentResult",
+      "props": {
+        "status": "SUCCESS"
+      },
+      "on": {
+        "DONE": "receipts_access"
+      }
+    },
+    "receipts_access": {
+      "screen": "AcquiringReceipt",
       "on": {
         "DONE": "END"
       }
