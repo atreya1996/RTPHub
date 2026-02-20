@@ -371,7 +371,7 @@ export function LoyaltyRedemptionDetails({ onAction, context }: ScreenProps) {
           <div className="text-xs text-ink/65">Use 500 points for {formatMoney(5, context.currency, context.locale)} off + earn 60 new points.</div>
         </div>
         <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("REDEMPTION_CONFIRMED")}>
-          Continue to authentication
+          Review and confirm
         </button>
       </div>
     </ScreenShell>
@@ -380,11 +380,11 @@ export function LoyaltyRedemptionDetails({ onAction, context }: ScreenProps) {
 
 export function PaymentAuthentication({ onAction }: ScreenProps) {
   return (
-    <ScreenShell title="Authenticate Payment">
+    <ScreenShell title="Confirm Payment">
       <div className="space-y-3 text-sm">
-        <div>Approve with biometrics or passcode before we process this payment.</div>
+        <div>Review amount and merchant details before confirming this payment.</div>
         <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("AUTH_SUCCESS")}>
-          Authenticate
+          Confirm payment
         </button>
       </div>
     </ScreenShell>
@@ -402,25 +402,41 @@ export function AcquiringReceipt({ onAction, context, props }: ScreenProps) {
         <div className="text-lg font-semibold text-ink">Payment successful</div>
         <div className="rounded-card border border-border bg-surface px-3 py-2.5 text-xs text-ink/75">
           <div>Flow: {flow}</div>
-          <div>Transaction ID: {txId}</div>
-          <div>Date/Time: {now.toLocaleString(context.locale)}</div>
+          <div>Ref ID: {txId}</div>
+          <div>Timestamp: {now.toLocaleString(context.locale)}</div>
           <div>Merchant: {context.merchant?.name ?? "Merchant"}</div>
-          <div>Amount: {formatMoney(amount, context.currency, context.locale)}</div>
+          <div>Subtotal: {formatMoney(amount * 0.94, context.currency, context.locale)}</div>
+          <div>Fees: {formatMoney(amount * 0.06, context.currency, context.locale)}</div>
+          <div className="font-semibold">Total: {formatMoney(amount, context.currency, context.locale)}</div>
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          <button className="min-h-11 rounded-button border border-border bg-surface px-4 py-2.5 text-sm font-semibold text-ink">Share</button>
+          <button className="min-h-11 rounded-button border border-border bg-surface px-4 py-2.5 text-sm font-semibold text-ink">Download</button>
         </div>
         <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("DONE")}>
-          Back to Payments Hub
+          Back to payments
         </button>
       </div>
     </ScreenShell>
   );
 }
 
-export function Processing() {
+export function Processing({ context, onAction }: ScreenProps) {
+  const isLowNetwork = context.demo.networkMode === "Low";
+  const isPending = context.demo.outcomeMode === "Pending";
   return (
-    <ScreenShell title="Processing">
-      <div className="flex items-center justify-between text-sm">
-        <span>Contacting network...</span>
-        <span className="pill-chip border-none bg-accentLime/30 text-ink">In flight</span>
+    <ScreenShell title="Processing payment">
+      <div className="space-y-3 text-sm">
+        <div className="flex items-center justify-between">
+          <span>{isLowNetwork ? "Network unstable • retry logic active" : "Contacting payment network"}</span>
+          <span className="pill-chip border-none bg-accentLime/30 text-ink">{isPending ? "Queued" : "In-flight"}</span>
+        </div>
+        <div className="rounded-card border border-border bg-surface px-3 py-2.5 text-xs text-ink/70">
+          <div>1) Validating merchant</div>
+          <div>2) Reserving funds</div>
+          <div>3) Posting settlement instruction</div>
+        </div>
+        {isLowNetwork ? <button className="min-h-11 rounded-button border border-border bg-surface px-4 py-2.5 text-sm font-semibold text-ink" onClick={() => onAction("FAILURE")}>Trigger retry path</button> : null}
       </div>
     </ScreenShell>
   );
@@ -452,7 +468,7 @@ export function PaymentResult({ onAction, props, context }: ScreenProps) {
 export function FlowFinalScreen({ onAction, props, context }: ScreenProps) {
   const normalizedStatus = typeof props?.status === "string" ? props.status.toUpperCase() : "SUCCESS";
   const isFailure = normalizedStatus === "FAILURE" || normalizedStatus === "FAILED";
-  const heading = isFailure ? "Payment journey ended with an issue" : "Payment journey complete";
+  const heading = isFailure ? "Payment needs attention" : "Payment complete";
   const amount = typeof props?.amount === "number" ? props.amount : undefined;
   const reference = typeof props?.reference === "string" ? props.reference : undefined;
   const transactionId = typeof props?.txId === "string" ? props.txId : undefined;
@@ -460,7 +476,7 @@ export function FlowFinalScreen({ onAction, props, context }: ScreenProps) {
   const timestamp = new Date().toLocaleString(context.locale);
 
   return (
-    <ScreenShell title="Flow Complete">
+    <ScreenShell title="Payment summary">
       <div className="space-y-3 text-sm">
         <div className="text-lg font-semibold text-ink">{heading}</div>
         <div className="rounded-card border border-border bg-surface px-3 py-2.5 text-xs text-ink/80">
@@ -622,7 +638,7 @@ export function BillPaymentConfirmation({ onAction, context, props }: ScreenProp
           <div>Amount: {formatMoney(amount, context.currency, context.locale)}</div>
           <div>Timestamp: {timestamp}</div>
         </div>
-        <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("CONFIRM")}>Confirm and authenticate
+        <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("CONFIRM")}>Confirm payment
         </button>
       </div>
     </ScreenShell>
@@ -724,6 +740,40 @@ export function ExecutionResultsList({ onAction }: ScreenProps) {
         <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("DONE")}>
           Done
         </button>
+      </div>
+    </ScreenShell>
+  );
+}
+
+
+export function UploadBill({ onAction }: ScreenProps) {
+  return (
+    <ScreenShell title="Upload bill">
+      <div className="space-y-3 text-sm">
+        <div>Capture or import a bill document to continue.</div>
+        <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("UPLOADED")}>Use sample bill</button>
+      </div>
+    </ScreenShell>
+  );
+}
+
+export function ExtractionPreview({ onAction }: ScreenProps) {
+  return (
+    <ScreenShell title="Review extracted details">
+      <div className="space-y-3 text-sm">
+        <div>We found biller, amount and due date from the uploaded document.</div>
+        <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("CONFIRM")}>Continue</button>
+      </div>
+    </ScreenShell>
+  );
+}
+
+export function ConfirmPayFromAgent({ onAction, context }: ScreenProps) {
+  return (
+    <ScreenShell title="Confirm payment">
+      <div className="space-y-3 text-sm">
+        <div>Confirm {formatMoney(18, context.currency, context.locale)} to proceed.</div>
+        <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("CONFIRM")}>Pay now</button>
       </div>
     </ScreenShell>
   );
