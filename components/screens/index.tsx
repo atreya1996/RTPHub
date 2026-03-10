@@ -2,6 +2,8 @@ import ScreenShell from "./ScreenShell";
 import { useMemo, useState, type ReactNode } from "react";
 import type { ResolvedContext } from "../../lib/schema/types";
 import { formatMoney } from "../../lib/runtime/formatMoney";
+import OfferDetailsOffer from "./dynamic-qr/OfferDetailsOffer";
+import OfferDetailsCashback from "./dynamic-qr/OfferDetailsCashback";
 
 export type ScreenProps = {
   context: ResolvedContext;
@@ -346,6 +348,8 @@ export function StaticQRReviewPay({ onAction, context, props }: ScreenProps) {
 }
 
 export function DynamicQRInvoice({ onAction, context }: ScreenProps) {
+  const offerDetailsEnabled = context.scenario?.optionalModules?.dynamicQROfferDetails?.enabled ?? false;
+
   return (
     <ScreenShell title="Merchant Invoice QR">
       <div className="space-y-3 text-sm">
@@ -354,7 +358,10 @@ export function DynamicQRInvoice({ onAction, context }: ScreenProps) {
           <div className="text-lg font-semibold text-ink">{formatMoney(52.8, context.currency, context.locale)}</div>
           <div className="text-xs text-ink/65">{context.merchant?.name ?? "Merchant"} • Invoice #INV-240381</div>
         </div>
-        <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("INVOICE_REVIEWED")}>
+        <button
+          className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]"
+          onClick={() => onAction(offerDetailsEnabled ? "INVOICE_REVIEWED_WITH_OFFERS" : "INVOICE_REVIEWED")}
+        >
           Continue
         </button>
       </div>
@@ -362,20 +369,14 @@ export function DynamicQRInvoice({ onAction, context }: ScreenProps) {
   );
 }
 
-export function DynamicQROfferDetails({ onAction }: ScreenProps) {
-  return (
-    <ScreenShell title="Offer & Cashback">
-      <div className="space-y-3 text-sm">
-        <div className="rounded-card border border-border bg-surface px-3 py-2.5">
-          <div className="font-medium text-ink">Cashback unlocked</div>
-          <div className="text-xs text-ink/65">5% instant cashback + 2x partner points on this invoice payment.</div>
-        </div>
-        <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("OFFERS_ACCEPTED")}>
-          Apply and continue
-        </button>
-      </div>
-    </ScreenShell>
-  );
+export function DynamicQROfferDetails({ onAction, context }: ScreenProps) {
+  const variant = context.scenario?.optionalModules?.dynamicQROfferDetails?.variant ?? "cashback";
+
+  if (variant === "offer") {
+    return <OfferDetailsOffer onAction={onAction} />;
+  }
+
+  return <OfferDetailsCashback onAction={onAction} />;
 }
 
 export function LoyaltyWalletPreview({ onAction }: ScreenProps) {

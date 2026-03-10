@@ -126,6 +126,7 @@ export function resolveContext(
     campaigns: (data.campaigns as Campaign[]).filter((campaign) =>
       campaign.appliesToMerchantIds.includes(merchant?.id ?? "")
     ),
+    scenario: usecase.scenario,
     demo: {
       networkMode: demoOverrides?.networkMode ?? "Normal",
       outcomeMode: demoOverrides?.outcomeMode ?? "Happy",
