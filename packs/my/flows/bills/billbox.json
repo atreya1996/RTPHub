@@ -6,19 +6,7 @@
     "billbox": {
       "screen": "BillInbox",
       "on": {
-        "PAY_SELECTED": "confirmation"
-      }
-    },
-    "confirmation": {
-      "screen": "BillPaymentConfirmation",
-      "props": {
-        "biller": "TNG Electricity Bill",
-        "reference": "ELEC-1182-4041",
-        "amount": 182.3,
-        "timestamp": "2026-01-18 10:32"
-      },
-      "on": {
-        "CONFIRM": "payment_authentication"
+        "PAY_SELECTED": "payment_authentication"
       }
     },
     "payment_authentication": {
@@ -48,18 +36,18 @@
         "timestamp": "2026-01-18 10:33"
       },
       "on": {
-        "VIEW_PAID_RECEIPTS": "paid_receipts",
+        "VIEW_PAYMENT_HISTORY": "payment_history",
         "DONE": "flow_final_success"
       }
     },
-    "paid_receipts": {
+    "payment_history": {
       "screen": "PaidReceiptsList",
       "on": {
-        "OPEN_RECEIPT": "receipt_details",
+        "OPEN_PAYMENT_DETAIL": "past_payment_detail",
         "DONE": "flow_final_success"
       }
     },
-    "receipt_details": {
+    "past_payment_detail": {
       "screen": "PaidReceiptDetails",
       "props": {
         "biller": "TNG Electricity Bill",

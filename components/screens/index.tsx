@@ -128,6 +128,64 @@ function getBillMeta(context: ResolvedContext, props?: Record<string, unknown>) 
   return { amount, biller, reference, timestamp };
 }
 
+function PaymentStatusBadge({ status }: { status: string }) {
+  const isSuccess = status === "SUCCESS";
+  return (
+    <span
+      className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-[11px] font-semibold ${
+        isSuccess ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"
+      }`}
+    >
+      <span className="inline-block h-1.5 w-1.5 rounded-full bg-current" />
+      {isSuccess ? "Successful" : "Failed"}
+    </span>
+  );
+}
+
+function PaymentReceiptCard({
+  amount,
+  biller,
+  reference,
+  timestamp,
+  currency,
+  locale,
+  status = "SUCCESS"
+}: {
+  amount: number;
+  biller: string;
+  reference: string;
+  timestamp: string;
+  currency: ResolvedContext["currency"];
+  locale: string;
+  status?: string;
+}) {
+  return (
+    <div className="space-y-3 rounded-card border border-border bg-surface px-3 py-3">
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-xs uppercase tracking-wide text-ink/60">Amount paid</p>
+          <p className="text-2xl font-semibold tracking-tight text-ink">{formatMoney(amount, currency, locale)}</p>
+        </div>
+        <PaymentStatusBadge status={status} />
+      </div>
+      <div className="grid grid-cols-2 gap-2 rounded-card border border-border/80 bg-bg px-2.5 py-2 text-xs text-ink/80">
+        <div>
+          <p className="text-[11px] uppercase tracking-wide text-ink/55">Biller</p>
+          <p className="mt-0.5 font-medium text-ink">{biller}</p>
+        </div>
+        <div>
+          <p className="text-[11px] uppercase tracking-wide text-ink/55">Reference</p>
+          <p className="mt-0.5 font-medium text-ink">{reference}</p>
+        </div>
+        <div className="col-span-2">
+          <p className="text-[11px] uppercase tracking-wide text-ink/55">Timestamp</p>
+          <p className="mt-0.5 font-medium text-ink">{timestamp}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const MENU_ITEMS: Array<{ key: BottomMenuKey; label: string; path: string }> = [
   { key: "home", label: "Home", path: "M3 10.5 12 4l9 6.5V20a1 1 0 0 1-1 1h-5.5v-6h-5v6H4a1 1 0 0 1-1-1v-9.5Z" },
   { key: "bills", label: "Bills", path: "M7 4h10a2 2 0 0 1 2 2v14l-3-1.5L13 20l-3-1.5L7 20V6a2 2 0 0 1 2-2Z" },
@@ -678,16 +736,27 @@ export function BillInbox({ onAction, context }: ScreenProps) {
 export function BillPaymentConfirmation({ onAction, context, props }: ScreenProps) {
   const { amount, biller, reference, timestamp } = getBillMeta(context, props);
   return (
-    <ScreenShell title="Bill Payment Confirmation" bottomNav={<BottomNavigation active="bills" />}>
+    <ScreenShell title="Review & Pay Bill" bottomNav={<BottomNavigation active="bills" />}>
       <div className="space-y-3 text-sm">
-        <div className="rounded-card border border-border bg-surface px-3 py-2.5 text-xs text-ink/80">
-          <div className="text-sm font-semibold text-ink">Confirm this bill payment</div>
-          <div className="mt-1.5">Biller: {biller}</div>
-          <div>Reference: {reference}</div>
-          <div>Amount: {formatMoney(amount, context.currency, context.locale)}</div>
-          <div>Timestamp: {timestamp}</div>
+        <div className="space-y-2 rounded-card border border-border bg-surface px-3 py-3">
+          <div className="text-xs uppercase tracking-wide text-ink/60">Ready to pay</div>
+          <div className="text-2xl font-semibold tracking-tight text-ink">{formatMoney(amount, context.currency, context.locale)}</div>
+          <div className="grid grid-cols-2 gap-2 rounded-card border border-border/80 bg-bg px-2.5 py-2 text-xs text-ink/80">
+            <div>
+              <div className="text-[11px] uppercase tracking-wide text-ink/55">Biller</div>
+              <div className="mt-0.5 font-medium text-ink">{biller}</div>
+            </div>
+            <div>
+              <div className="text-[11px] uppercase tracking-wide text-ink/55">Reference</div>
+              <div className="mt-0.5 font-medium text-ink">{reference}</div>
+            </div>
+            <div className="col-span-2">
+              <div className="text-[11px] uppercase tracking-wide text-ink/55">Requested at</div>
+              <div className="mt-0.5 font-medium text-ink">{timestamp}</div>
+            </div>
+          </div>
         </div>
-        <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("CONFIRM")}>Confirm payment
+        <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("PAY")}>Slide/Pay now
         </button>
       </div>
     </ScreenShell>
@@ -701,14 +770,11 @@ export function BillPaymentReceipt({ onAction, context, props }: ScreenProps) {
     <ScreenShell title="Bill Payment Receipt" bottomNav={<BottomNavigation active="bills" />}>
       <div className="space-y-3 text-sm">
         <div className="text-lg font-semibold text-ink">{status === "SUCCESS" ? "Bill paid successfully" : "Bill payment failed"}</div>
-        <div className="rounded-card border border-border bg-surface px-3 py-2.5 text-xs text-ink/80">
-          <div>Biller: {biller}</div>
-          <div>Reference: {reference}</div>
-          <div>Amount: {formatMoney(amount, context.currency, context.locale)}</div>
-          <div>Timestamp: {timestamp}</div>
-        </div>
+        <PaymentReceiptCard amount={amount} biller={biller} reference={reference} timestamp={timestamp} currency={context.currency} locale={context.locale} status={status} />
         <div className="flex gap-2">
-          <button className="min-h-11 rounded-button border border-border bg-surface px-4 py-2.5 text-sm font-semibold text-ink" onClick={() => onAction("VIEW_PAID_RECEIPTS")}>View paid receipts</button>
+          <button className="min-h-11 rounded-button border border-border bg-surface px-4 py-2.5 text-sm font-semibold text-ink" onClick={() => onAction("VIEW_PAYMENT_HISTORY")}>Payment history</button>
+          <button className="min-h-11 rounded-button border border-border bg-surface px-4 py-2.5 text-sm font-semibold text-ink">Share</button>
+          <button className="min-h-11 rounded-button border border-border bg-surface px-4 py-2.5 text-sm font-semibold text-ink">Download</button>
           <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("DONE")}>Done</button>
         </div>
       </div>
@@ -719,12 +785,18 @@ export function BillPaymentReceipt({ onAction, context, props }: ScreenProps) {
 export function PaidReceiptsList({ onAction, context }: ScreenProps) {
   const receipts = getBillItems(context.locale).slice(0, 3);
   return (
-    <ScreenShell title="Paid Bill Receipts" bottomNav={<BottomNavigation active="bills" />}>
+    <ScreenShell title="Payment History" bottomNav={<BottomNavigation active="bills" />}>
       <div className="space-y-2 text-sm">
+        <div className="text-xs uppercase tracking-wide text-ink/60">Past Payments</div>
         {receipts.map((item) => (
-          <button key={item.id} className="w-full rounded-card border border-border bg-surface px-3 py-2 text-left" onClick={() => onAction("OPEN_RECEIPT")}> 
-            <div className="font-medium text-ink">{item.label}</div>
-            <div className="text-xs text-ink/70">Ref: {item.reference} • {formatMoney(item.amount, context.currency, context.locale)}</div>
+          <button key={item.id} className="w-full rounded-card border border-border bg-surface px-3 py-2.5 text-left" onClick={() => onAction("OPEN_PAYMENT_DETAIL")}>
+            <div className="flex items-start justify-between gap-2">
+              <div>
+                <div className="font-medium text-ink">{item.label}</div>
+                <div className="text-xs text-ink/70">Ref: {item.reference}</div>
+              </div>
+              <div className="text-sm font-semibold text-ink">{formatMoney(item.amount, context.currency, context.locale)}</div>
+            </div>
           </button>
         ))}
       </div>
@@ -735,13 +807,12 @@ export function PaidReceiptsList({ onAction, context }: ScreenProps) {
 export function PaidReceiptDetails({ onAction, context, props }: ScreenProps) {
   const { amount, biller, reference, timestamp } = getBillMeta(context, props);
   return (
-    <ScreenShell title="Receipt Details" bottomNav={<BottomNavigation active="bills" />}>
+    <ScreenShell title="Past Payment Detail" bottomNav={<BottomNavigation active="bills" />}>
       <div className="space-y-3 text-sm">
-        <div className="rounded-card border border-border bg-surface px-3 py-2.5 text-xs text-ink/80">
-          <div>Biller: {biller}</div>
-          <div>Reference: {reference}</div>
-          <div>Amount: {formatMoney(amount, context.currency, context.locale)}</div>
-          <div>Timestamp: {timestamp}</div>
+        <PaymentReceiptCard amount={amount} biller={biller} reference={reference} timestamp={timestamp} currency={context.currency} locale={context.locale} status="SUCCESS" />
+        <div className="flex gap-2">
+          <button className="min-h-11 rounded-button border border-border bg-surface px-4 py-2.5 text-sm font-semibold text-ink">Share</button>
+          <button className="min-h-11 rounded-button border border-border bg-surface px-4 py-2.5 text-sm font-semibold text-ink">Download</button>
         </div>
         <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("DONE")}>Back to inbox</button>
       </div>
