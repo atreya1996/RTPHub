@@ -1,0 +1,36 @@
+{
+  "id": "acq_loyalty_earn",
+  "title": "Loyalty Earn",
+  "entry": "authenticate",
+  "steps": {
+    "authenticate": {
+      "screen": "PaymentAuthentication",
+      "on": {
+        "AUTH_SUCCESS": "processing"
+      }
+    },
+    "processing": {
+      "screen": "Processing",
+      "simulate": {
+        "delayMs": 1000,
+        "result": "SUCCESS"
+      },
+      "on": {
+        "SUCCESS": "flow_final_success"
+      }
+    },
+    "flow_final_success": {
+      "screen": "FlowFinalScreen",
+      "props": {
+        "status": "SUCCESS",
+        "flowLabel": "Loyalty Earn",
+        "txId": "MY-LOY-EARN-24001",
+        "amount": 23.4,
+        "pointsEarned": 60
+      },
+      "on": {
+        "BACK_TO_HUB": "END"
+      }
+    }
+  }
+}

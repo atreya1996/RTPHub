@@ -1,20 +1,14 @@
 {
-  "id": "acq_loyalty_combined",
-  "title": "Loyalty + Cashback",
-  "entry": "wallet_preview",
+  "id": "acq_loyalty_redeem",
+  "title": "Loyalty Redeem",
+  "entry": "redemption_details",
   "steps": {
-    "wallet_preview": {
-      "screen": "LoyaltyWalletPreview",
-      "on": {
-        "PREVIEW_CONFIRMED": "redemption_details"
-      }
-    },
     "redemption_details": {
       "screen": "LoyaltyRedemptionDetails",
       "props": {
         "pointsUsed": 500,
         "remainingPayable": 18.4,
-        "pointsEarned": 60
+        "pointsEarned": 0
       },
       "on": {
         "REDEMPTION_CONFIRMED": "authenticate"
@@ -40,14 +34,11 @@
       "screen": "FlowFinalScreen",
       "props": {
         "status": "SUCCESS",
-        "flowLabel": "Loyalty + Cashback",
-        "txId": "MY-LOY-COMBO-24001",
+        "flowLabel": "Loyalty Redeem",
+        "txId": "MY-LOY-RED-24001",
         "amount": 18.4,
-        "pointsEarned": 60,
         "pointsUsed": 500,
-        "remainingPayable": 18.4,
-        "cashbackAmount": 1.17,
-        "cashbackDestinationWallet": "Rewards Wallet"
+        "remainingPayable": 18.4
       },
       "on": {
         "BACK_TO_HUB": "END"

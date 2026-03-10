@@ -394,13 +394,18 @@ export function LoyaltyWalletPreview({ onAction }: ScreenProps) {
   );
 }
 
-export function LoyaltyRedemptionDetails({ onAction, context }: ScreenProps) {
+export function LoyaltyRedemptionDetails({ onAction, context, props }: ScreenProps) {
+  const pointsUsed = typeof props?.pointsUsed === "number" ? props.pointsUsed : 500;
+  const remainingPayable = typeof props?.remainingPayable === "number" ? props.remainingPayable : 18;
+  const pointsEarned = typeof props?.pointsEarned === "number" ? props.pointsEarned : 60;
   return (
     <ScreenShell title="Redemption Details">
       <div className="space-y-3 text-sm">
         <div className="rounded-card border border-border bg-surface px-3 py-2.5">
           <div className="font-medium text-ink">Redeeming on this payment</div>
-          <div className="text-xs text-ink/65">Use 500 points for {formatMoney(5, context.currency, context.locale)} off + earn 60 new points.</div>
+          <div className="text-xs text-ink/65">Points used: {pointsUsed}</div>
+          <div className="text-xs text-ink/65">Remaining payable: {formatMoney(remainingPayable, context.currency, context.locale)}</div>
+          <div className="text-xs text-ink/65">Points earned after payment: {pointsEarned}</div>
         </div>
         <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("REDEMPTION_CONFIRMED")}>
           Review and confirm
@@ -505,6 +510,12 @@ export function FlowFinalScreen({ onAction, props, context }: ScreenProps) {
   const reference = typeof props?.reference === "string" ? props.reference : undefined;
   const transactionId = typeof props?.txId === "string" ? props.txId : undefined;
   const flowLabel = typeof props?.flowLabel === "string" ? props.flowLabel : undefined;
+  const pointsEarned = typeof props?.pointsEarned === "number" ? props.pointsEarned : undefined;
+  const pointsUsed = typeof props?.pointsUsed === "number" ? props.pointsUsed : undefined;
+  const remainingPayable = typeof props?.remainingPayable === "number" ? props.remainingPayable : undefined;
+  const cashbackAmount = typeof props?.cashbackAmount === "number" ? props.cashbackAmount : undefined;
+  const cashbackDestinationWallet =
+    typeof props?.cashbackDestinationWallet === "string" ? props.cashbackDestinationWallet : undefined;
   const timestamp = new Date().toLocaleString(context.locale);
 
   return (
@@ -516,6 +527,11 @@ export function FlowFinalScreen({ onAction, props, context }: ScreenProps) {
           {flowLabel ? <div>Flow: {flowLabel}</div> : null}
           <div>Merchant: {context.merchant?.name ?? "N/A"}</div>
           {amount !== undefined ? <div>Amount: {formatMoney(amount, context.currency, context.locale)}</div> : null}
+          {pointsEarned !== undefined ? <div>Points earned: {pointsEarned}</div> : null}
+          {pointsUsed !== undefined ? <div>Points used: {pointsUsed}</div> : null}
+          {remainingPayable !== undefined ? <div>Remaining payable: {formatMoney(remainingPayable, context.currency, context.locale)}</div> : null}
+          {cashbackAmount !== undefined ? <div>Cashback: {formatMoney(cashbackAmount, context.currency, context.locale)}</div> : null}
+          {cashbackDestinationWallet ? <div>Cashback destination: {cashbackDestinationWallet}</div> : null}
           {reference ? <div>Reference: {reference}</div> : null}
           {transactionId ? <div>Transaction ID: {transactionId}</div> : null}
           <div>Timestamp: {timestamp}</div>
