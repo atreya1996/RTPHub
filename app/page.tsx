@@ -9,7 +9,8 @@ import HubTile from "../components/HubTile";
 import ThemeStudio from "../components/ThemeStudio";
 import AppProfileHeader from "../components/AppProfileHeader";
 import type { ResolvedContext, UseCase } from "../lib/schema/types";
-import { countryCodeFromPackId } from "../lib/runtime/currencyByCountry";
+import { countryCodeFromPackId, isSupportedCountryCode, type SupportedCountryCode } from "../lib/runtime/currencyByCountry";
+import { readQueryOverrides, readStoredOverrides, type ThemeOverrides } from "../lib/runtime/applyOverrides";
 import type { Demo } from "@/types/demo";
 import Skeleton from "@/components/ui/Skeleton";
 import { loadPackBundle, preloadPackBundle, type PackBundle } from "@/runtime/packs/packLoader";
@@ -41,9 +42,59 @@ function applyTheme(bundle: PackBundle) {
   root.style.setProperty("--shadow-card", bundle.theme.shadow.card);
 }
 
+function resolvePackAssetPath(packId: string, assetPath?: string): string {
+  if (!assetPath) return "";
+  if (assetPath.startsWith("/") || assetPath.startsWith("http://") || assetPath.startsWith("https://")) {
+    return assetPath;
+  }
+  return `/packs/${packId}/${assetPath}`;
+}
+
+function resolveAppLogoUrl(packId: string, packLogoPath: string | undefined, overrides: ThemeOverrides): string {
+  const defaultLogoUrl = resolvePackAssetPath(packId, packLogoPath);
+
+  if (overrides.appLogoMode === "upload") {
+    if (overrides.appLogoUploadDataUrl?.startsWith("data:image/")) {
+      return overrides.appLogoUploadDataUrl;
+    }
+    if (overrides.appLogoPath && !overrides.appLogoPath.startsWith("blob:")) {
+      return overrides.appLogoPath;
+    }
+    return defaultLogoUrl;
+  }
+
+  return overrides.appLogoPath || defaultLogoUrl;
+}
+
+
+function resolveCountryCode(overrideCountryCode: string | undefined, packId: string): SupportedCountryCode {
+  const normalized = overrideCountryCode?.toUpperCase();
+  if (isSupportedCountryCode(normalized)) {
+    return normalized;
+  }
+  return countryCodeFromPackId(packId);
+}
+
 function HomePageContent() {
   const searchParams = useSearchParams();
   const currentPackId = resolvePackId(searchParams);
+  const [themeOverrides, setThemeOverrides] = useState<ThemeOverrides>(() => {
+    const storedOverrides = readStoredOverrides();
+    const queryOverrides = readQueryOverrides(searchParams);
+    return {
+      ...storedOverrides,
+      ...queryOverrides,
+      countryCode: queryOverrides.countryCode ?? storedOverrides.countryCode
+    };
+  });
+  useEffect(() => {
+    const queryOverrides = readQueryOverrides(searchParams);
+    setThemeOverrides((prev) => ({
+      ...prev,
+      ...queryOverrides,
+      countryCode: queryOverrides.countryCode ?? prev.countryCode
+    }));
+  }, [searchParams]);
   const [bundle, setBundle] = useState<PackBundle | null>(null);
   const [loadState, setLoadState] = useState<"loading" | "timeout" | "ready">("loading");
   const [activeHub, setActiveHub] = useState<"acquiring" | "bills">("acquiring");
@@ -92,10 +143,13 @@ function HomePageContent() {
   const context: ResolvedContext | null = useMemo(() => {
     if (!bundle || !activeUsecase) return null;
     const merchant = bundle.merchants.find((item) => item.id === activeUsecase.merchantRef);
+    const resolvedAppName = themeOverrides.appName || bundle.pack.appIdentity.name;
+    const resolvedAppLogoUrl = resolveAppLogoUrl(bundle.pack.packId, bundle.pack.appIdentity.logoPath, themeOverrides);
+
     return {
       app: {
-        name: bundle.pack.appIdentity.name,
-        logoUrl: `/packs/${bundle.pack.packId}/${bundle.pack.appIdentity.logoPath}`
+        name: resolvedAppName,
+        logoUrl: resolvedAppLogoUrl
       },
       locale: bundle.pack.defaultLocale,
       currency: {
@@ -114,7 +168,7 @@ function HomePageContent() {
       campaigns: bundle.campaigns,
       demo
     };
-  }, [bundle, activeUsecase, demo]);
+  }, [bundle, activeUsecase, demo, themeOverrides]);
 
   if (loadState !== "ready" || !bundle || !activeUsecase || !context) {
     return (
@@ -196,8 +250,16 @@ function HomePageContent() {
           </div>
         </div>
         <ThemeStudio
-          initial={{ appName: context.app.name, appLogoPath: context.app.logoUrl, countryCode: countryCodeFromPackId(bundle.pack.packId) }}
-          onOverridesChange={() => undefined}
+          initial={{
+            appName: themeOverrides.appName ?? bundle.pack.appIdentity.name,
+            appLogoPath: themeOverrides.appLogoPath ?? context.app.logoUrl,
+            appLogoMode: themeOverrides.appLogoMode,
+            appLogoUploadDataUrl: themeOverrides.appLogoUploadDataUrl,
+            countryCode: resolveCountryCode(themeOverrides.countryCode, bundle.pack.packId)
+          }}
+          onOverridesChange={(overrides) => {
+            setThemeOverrides(overrides);
+          }}
           demo={demo}
           onDemoChange={setDemo}
         />
