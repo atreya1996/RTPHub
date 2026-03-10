@@ -32,11 +32,31 @@
     }
   },
   {
-    "id": "loyalty_combo",
-    "title": "Cashback + Loyalty",
-    "description": "Apply offer and earn points",
+    "id": "loyalty_earn",
+    "title": "Loyalty Earn",
+    "description": "Pay and earn loyalty points",
     "icon": "loyalty",
-    "flowPath": "flows/acquiring/loyalty.json",
+    "flowPath": "flows/acquiring/loyalty-earn.json",
+    "contentPath": "content/acquiring/loyalty.mdx",
+    "merchantRef": "merchant_pharmacy",
+    "overrides": {}
+  },
+  {
+    "id": "loyalty_redeem",
+    "title": "Loyalty Redeem",
+    "description": "Use points to reduce payment amount",
+    "icon": "loyalty",
+    "flowPath": "flows/acquiring/loyalty-redeem.json",
+    "contentPath": "content/acquiring/loyalty.mdx",
+    "merchantRef": "merchant_pharmacy",
+    "overrides": {}
+  },
+  {
+    "id": "cashback",
+    "title": "Cashback",
+    "description": "Pay and receive cashback to wallet",
+    "icon": "loyalty",
+    "flowPath": "flows/acquiring/cashback.json",
     "contentPath": "content/acquiring/loyalty.mdx",
     "merchantRef": "merchant_pharmacy",
     "overrides": {}

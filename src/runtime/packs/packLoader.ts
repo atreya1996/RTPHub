@@ -19,7 +19,7 @@ export type PackBundle = {
 
 const loaders = {
   my: async (): Promise<PackBundle> => {
-    const [pack, theme, merchants, campaigns, acquiring, bills, s, d, l, bb, pa, ag] = await Promise.all([
+    const [pack, theme, merchants, campaigns, acquiring, bills, s, d, le, lr, cb, lc, bb, pa, ag] = await Promise.all([
       import("../../../packs/my/pack.json"),
       import("../../../packs/my/theme.json"),
       import("../../../packs/my/merchants.json"),
@@ -28,7 +28,10 @@ const loaders = {
       import("../../../packs/my/usecases.bills.json"),
       import("../../../packs/my/flows/acquiring/static-qr.json"),
       import("../../../packs/my/flows/acquiring/dynamic-qr.json"),
-      import("../../../packs/my/flows/acquiring/loyalty.json"),
+      import("../../../packs/my/flows/acquiring/loyalty-earn.json"),
+      import("../../../packs/my/flows/acquiring/loyalty-redeem.json"),
+      import("../../../packs/my/flows/acquiring/cashback.json"),
+      import("../../../packs/my/flows/acquiring/loyalty-combined.json"),
       import("../../../packs/my/flows/bills/billbox.json"),
       import("../../../packs/my/flows/bills/pay-all.json"),
       import("../../../packs/my/flows/bills/agentic.json")
@@ -43,7 +46,10 @@ const loaders = {
       flows: {
         "flows/acquiring/static-qr.json": s.default as FlowDefinition,
         "flows/acquiring/dynamic-qr.json": d.default as FlowDefinition,
-        "flows/acquiring/loyalty.json": l.default as FlowDefinition,
+        "flows/acquiring/loyalty-earn.json": le.default as FlowDefinition,
+        "flows/acquiring/loyalty-redeem.json": lr.default as FlowDefinition,
+        "flows/acquiring/cashback.json": cb.default as FlowDefinition,
+        "flows/acquiring/loyalty-combined.json": lc.default as FlowDefinition,
         "flows/bills/billbox.json": bb.default as FlowDefinition,
         "flows/bills/pay-all.json": pa.default as FlowDefinition,
         "flows/bills/agentic.json": ag.default as FlowDefinition
