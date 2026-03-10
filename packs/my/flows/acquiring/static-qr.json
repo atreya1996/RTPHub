@@ -6,11 +6,11 @@
     "scan_qr": {
       "screen": "ScanQR",
       "on": {
-        "SCANNED": "enter_amount"
+        "SCANNED": "review_pay"
       }
     },
-    "enter_amount": {
-      "screen": "EnterAmount",
+    "review_pay": {
+      "screen": "StaticQRReviewPay",
       "props": {
         "suggested": [
           5,
@@ -19,13 +19,8 @@
         ]
       },
       "on": {
-        "AMOUNT_CONFIRMED": "merchant_confirm"
-      }
-    },
-    "merchant_confirm": {
-      "screen": "StaticQRMerchantConfirm",
-      "on": {
-        "MERCHANT_CONFIRMED": "authenticate"
+        "PAY": "processing",
+        "AUTH_REQUIRED": "authenticate"
       }
     },
     "authenticate": {
@@ -41,7 +36,16 @@
         "result": "SUCCESS"
       },
       "on": {
-        "SUCCESS": "receipt"
+        "SUCCESS": "success"
+      }
+    },
+    "success": {
+      "screen": "PaymentResult",
+      "props": {
+        "status": "SUCCESS"
+      },
+      "on": {
+        "DONE": "receipt"
       }
     },
     "receipt": {
@@ -52,17 +56,7 @@
         "amount": 18
       },
       "on": {
-        "DONE": "flow_final_success"
-      }
-    },
-    "flow_final_success": {
-      "screen": "FlowFinalScreen",
-      "props": {
-        "status": "SUCCESS",
-        "flowLabel": "Static QR"
-      },
-      "on": {
-        "BACK_TO_HUB": "END"
+        "DONE": "END"
       }
     }
   }

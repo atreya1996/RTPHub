@@ -313,6 +313,38 @@ export function StaticQRMerchantConfirm({ onAction, context }: ScreenProps) {
   );
 }
 
+export function StaticQRReviewPay({ onAction, context, props }: ScreenProps) {
+  const suggested = (props?.suggested as number[]) ?? [5, 10, 20];
+
+  return (
+    <ScreenShell title="Review & Pay">
+      <div className="space-y-3 text-sm">
+        <div className="rounded-card border border-border bg-surface px-3 py-2.5">
+          <div className="text-xs uppercase tracking-wide text-ink/60">Merchant</div>
+          <div className="text-base font-semibold text-ink">{context.merchant?.name ?? "Merchant"}</div>
+          <div className="text-xs text-ink/65">Static QR • customer-entered amount</div>
+        </div>
+
+        <div className="space-y-2 rounded-card border border-border bg-surface px-3 py-2.5">
+          <div className="text-xs uppercase tracking-wide text-ink/60">Amount</div>
+          <div className="text-lg font-semibold text-ink">{formatMoney(18, context.currency, context.locale)}</div>
+          <div className="flex flex-wrap gap-2">
+            {suggested.map((amount) => (
+              <span key={amount} className="pill-chip">
+                {formatMoney(amount, context.currency, context.locale)}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <button className="min-h-11 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-interactive)]" onClick={() => onAction("PAY")}>
+          Pay now
+        </button>
+      </div>
+    </ScreenShell>
+  );
+}
+
 export function DynamicQRInvoice({ onAction, context }: ScreenProps) {
   return (
     <ScreenShell title="Merchant Invoice QR">
@@ -988,6 +1020,7 @@ export const screenRegistry = {
   ScanQR,
   EnterAmount,
   ConfirmPay,
+  StaticQRReviewPay,
   StaticQRMerchantConfirm,
   DynamicQRInvoice,
   DynamicQROfferDetails,
