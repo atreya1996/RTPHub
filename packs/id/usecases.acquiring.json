@@ -22,7 +22,15 @@
     "flowPath": "flows/acquiring/dynamic-qr.json",
     "contentPath": "content/acquiring/dynamic-qr.mdx",
     "merchantRef": "merchant_minimart",
-    "overrides": {}
+    "overrides": {},
+    "scenario": {
+      "optionalModules": {
+        "dynamicQROfferDetails": {
+          "enabled": true,
+          "variant": "cashback"
+        }
+      }
+    }
   },
   {
     "id": "loyalty_combo",

@@ -6,7 +6,8 @@
     "invoice": {
       "screen": "DynamicQRInvoice",
       "on": {
-        "INVOICE_REVIEWED": "offer_details"
+        "INVOICE_REVIEWED": "authenticate",
+        "INVOICE_REVIEWED_WITH_OFFERS": "offer_details"
       }
     },
     "offer_details": {

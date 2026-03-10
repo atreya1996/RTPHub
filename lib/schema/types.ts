@@ -74,6 +74,14 @@ export type UseCase = {
     currencyCode?: string;
     currencySymbol?: string;
   };
+  scenario?: {
+    optionalModules?: {
+      dynamicQROfferDetails?: {
+        enabled: boolean;
+        variant?: "offer" | "cashback";
+      };
+    };
+  };
 };
 
 export type FlowDefinition = {
@@ -97,5 +105,6 @@ export type ResolvedContext = {
   currency: Currency;
   merchant: { id: string; name: string; logoUrl: string; category: string } | null;
   campaigns: Campaign[];
+  scenario?: UseCase["scenario"];
   demo: Demo;
 };
